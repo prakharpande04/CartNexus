@@ -8,7 +8,7 @@ import orderLogo from "./../assets/orders.png";
 import categoriesLogo from "./../assets/categories.png";
 import logoutLogo from "./../assets/logout.png";
 import homeLogo from "./../assets/home.png";
-import { useCart } from "../context/cartContext";
+import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
 
