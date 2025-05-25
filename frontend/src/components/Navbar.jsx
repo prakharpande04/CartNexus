@@ -8,7 +8,7 @@ import orderLogo from "./../assets/orders.png";
 import categoriesLogo from "./../assets/categories.png";
 import logoutLogo from "./../assets/logout.png";
 import homeLogo from "./../assets/home.png";
-import { useCart } from "../context/cartContext";
+import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
 
@@ -106,9 +106,18 @@ function Navbar() {
                     <span className="text-xs">Orders</span>
                 </li>
 
-                <li className="flex flex-col items-center justify-center text-gray-700 hover:text-black cursor-pointer">
-                    <img src={categoriesLogo} alt="CategoriesLogo" />
-                    <span className="text-xs">Categories</span>
+                <li className="group relative text-gray-700 hover:text-black cursor-pointer">
+                    <div className="flex flex-col items-center justify-center">
+                        <img src={categoriesLogo} alt="CategoriesLogo" />
+                        <span className="text-xs">Categories</span>
+                    </div>
+
+                    <ul className="absolute left-1/2 -translate-x-1/2 top-full mt-1 hidden w-40 flex-col items-start bg-white text-black shadow-lg rounded-md p-2 group-hover:flex z-50">
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Technology</li>
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Business</li>
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Health</li>
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Science</li>
+                    </ul>
                 </li>
 
                 <li className="flex flex-col items-center justify-center text-gray-700 hover:text-black cursor-pointer"

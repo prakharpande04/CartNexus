@@ -1,7 +1,10 @@
-import React from 'react'
-import './styles/Dashboard.css'
+import React from 'react';
+import './styles/Dashboard.css';
+import { useCart } from '../context/CartContext'; // Adjust path if needed
 
 function Dashboard() {
+  const { setCartCount, cartCount } = useCart();
+
   const featuredProducts = [
     {
       id: 1,
@@ -37,7 +40,6 @@ function Dashboard() {
     }
   ];
 
-  // Sample categories
   const categories = [
     {
       id: 1,
@@ -64,6 +66,11 @@ function Dashboard() {
       count: 210
     }
   ];
+
+  // Handler to add item to cart (increments cart count)
+  const handleAddToCart = () => {
+    setCartCount(cartCount + 1);
+  };
 
   return (
     <div className="dashboard-container">
@@ -131,7 +138,12 @@ function Dashboard() {
                   <button className="action-button">
                     <i className="fas fa-heart"></i>
                   </button>
-                  <button className="action-button">
+                  {/* We can keep or remove this cart icon button. Keeping for UI */}
+                  <button 
+                    className="action-button" 
+                    onClick={handleAddToCart} 
+                    title="Add to cart"
+                  >
                     <i className="fas fa-shopping-cart"></i>
                   </button>
                 </div>
@@ -150,6 +162,13 @@ function Dashboard() {
                   <span>({product.reviews})</span>
                 </div>
                 <p className="product-price">${product.price.toFixed(2)}</p>
+                <button 
+                  className="add-to-cart-button" 
+                  onClick={handleAddToCart}
+                  aria-label={`Add ${product.name} to cart`}
+                >
+                  Add to Cart
+                </button>
               </div>
             </div>
           ))}
@@ -192,4 +211,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard
+export default Dashboard;
