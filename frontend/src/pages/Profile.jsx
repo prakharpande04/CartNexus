@@ -3,219 +3,257 @@ import './styles/Profile.css'
 
 function Profile() {
   const [userData, setUserData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "+1 234 567 8900",
-    avatar: "https://via.placeholder.com/150",
-    joinDate: "January 2024",
+    userId: 'prakharpande04',
+    fullName: 'Prakhar Pande',
+    email: 'pandeprakhar1801@gmail.com',
+    phone: '8275711340',
+    gender: 'Male',
+    dob: '2024-01-18',
+    address: {
+      addressLine1: '1012, Ashirwad Nagar',
+      addressLine2: 'Near NIT Market',
+      city: 'Nagpur',
+      state: 'Maharashtra',
+      zip: '440024',
+      country: 'India'
+    },
+    cardName: 'Prakhar Sanjeev Pande',
+    cardNumber: '4287 8712 3658 1234',
+    expiry: '09/30',
+    cvv: '785',
   });
 
-  // Sample order history
-  const [orders] = useState([
-    {
-      id: "ORD001",
-      date: "2024-02-15",
-      total: 299.97,
-      status: "Delivered",
-      items: 3
-    },
-    {
-      id: "ORD002",
-      date: "2024-02-10",
-      total: 149.99,
-      status: "Processing",
-      items: 1
-    }
-  ]);
+  // Separate states for form inputs
+  const [personalDetails, setPersonalDetails] = useState({
+    fullName: userData.fullName,
+    email: userData.email,
+    phone: userData.phone,
+    gender: userData.gender,
+    dob: userData.dob,
+  });
 
-  // Sample saved addresses
-  const [addresses] = useState([
-    {
-      id: 1,
-      type: "Home",
-      street: "123 Main St",
-      city: "New York",
-      state: "NY",
-      zip: "10001",
-      isDefault: true
-    },
-    {
-      id: 2,
-      type: "Office",
-      street: "456 Business Ave",
-      city: "New York",
-      state: "NY",
-      zip: "10002",
-      isDefault: false
-    }
-  ]);
+  const [addressDetails, setAddressDetails] = useState(userData.address);
+
+  const [paymentDetails, setPaymentDetails] = useState({
+    cardName: userData.cardName,
+    cardNumber: userData.cardNumber,
+    expiry: userData.expiry,
+    cvv: userData.cvv,
+  });
+
 
   // Active tab state
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState('personal');
 
-  // Handle profile update
   const handleProfileUpdate = (e) => {
-    e.preventDefault();
-    // Add your profile update logic here
-    console.log("Profile updated");
-  };
+  e.preventDefault();
+  setUserData((prev) => ({
+    ...prev,
+    ...personalDetails,
+  }));
+  console.log("Personal details updated:", personalDetails);
+};
+
+const handleAddressUpdate = (e) => {
+  e.preventDefault();
+  setUserData((prev) => ({
+    ...prev,
+    address: addressDetails,
+  }));
+  console.log("Address updated:", addressDetails);
+};
+
+const handlePaymentUpdate = (e) => {
+  e.preventDefault();
+  setUserData((prev) => ({
+    ...prev,
+    ...paymentDetails,
+  }));
+  console.log("Payment details updated:", paymentDetails);
+};
+
 
   return (
-    <div className="profile-page">
-      <div className="profile-container">
-        <div className="profile-sidebar">
-          <div className="user-info">
-            <div className="avatar">
-              <img src={userData.avatar} alt="Profile" />
-              <button className="change-avatar">Change Photo</button>
-            </div>
-            <h2>{userData.firstName} {userData.lastName}</h2>
-            <p>Member since {userData.joinDate}</p>
-          </div>
-          <nav className="profile-nav">
-            <button 
-              className={activeTab === 'profile' ? 'active' : ''} 
-              onClick={() => setActiveTab('profile')}
-            >
-              <i className="fas fa-user"></i> Profile
-            </button>
-            <button 
-              className={activeTab === 'orders' ? 'active' : ''} 
-              onClick={() => setActiveTab('orders')}
-            >
-              <i className="fas fa-shopping-bag"></i> Orders
-            </button>
-            <button 
-              className={activeTab === 'addresses' ? 'active' : ''} 
-              onClick={() => setActiveTab('addresses')}
-            >
-              <i className="fas fa-map-marker-alt"></i> Addresses
-            </button>
-            <button 
-              className={activeTab === 'settings' ? 'active' : ''} 
-              onClick={() => setActiveTab('settings')}
-            >
-              <i className="fas fa-cog"></i> Settings
-            </button>
+    <div className="min-w-screen min-h-screen flex flex-col items-center justify-start p-4 text-black">
+      <h1 className="text-4xl font-extrabold text-center text-blue-700 mb-6 underline underline-offset-4 decoration-blue-400">
+        Profile
+      </h1>
+
+      <br /><br />
+
+      <div className="w-4/5 flex flex-row justify-between h-auto">
+        <div className="w-1/4 profile-sidebar flex flex-col items-center p-6 bg-white rounded-xl shadow-md border border-red-300 mr-4">
+          <img
+            src={userData.avatar}
+            alt="Avatar"
+            className="w-32 h-32 rounded-lg border-4 object-cover shadow-sm"
+          />
+          <h2 className="text-xl font-bold mt-4 text-gray-800">{userData.fullName}</h2>
+          <h4 className="text-sm text-gray-500 mb-6">@{userData.userId}</h4>
+
+          <nav className="w-full flex flex-col gap-2">
+            {['personal', 'address', 'payment'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`py-2 px-4 rounded-lg text-left transition font-medium ${
+                  activeTab === tab
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 hover:bg-blue-100 text-gray-800'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)} Details
+              </button>
+            ))}
           </nav>
         </div>
 
-        <div className="profile-content">
-          {activeTab === 'profile' && (
-            <div className="profile-section">
-              <h2>Personal Information</h2>
-              <form onSubmit={handleProfileUpdate}>
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>First Name</label>
-                    <input type="text" defaultValue={userData.firstName} />
-                  </div>
-                  <div className="form-group">
-                    <label>Last Name</label>
-                    <input type="text" defaultValue={userData.lastName} />
-                  </div>
-                  <div className="form-group">
-                    <label>Email</label>
-                    <input type="email" defaultValue={userData.email} />
-                  </div>
-                  <div className="form-group">
-                    <label>Phone</label>
-                    <input type="tel" defaultValue={userData.phone} />
-                  </div>
-                </div>
-                <button type="submit" className="save-button">Save Changes</button>
-              </form>
-            </div>
+        <div className="w-7/10 profile-main flex flex-col p-6 rounded-xl bg-white shadow-lg">
+          {activeTab === 'personal' && (
+            <form onSubmit={handleProfileUpdate} className="space-y-4">
+              <h2 className="text-xl font-bold mb-4 text-blue-700">Personal Details</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={personalDetails.fullName}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, fullName: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={personalDetails.email}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, email: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone"
+                  value={personalDetails.phone}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, phone: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="Gender"
+                  value={personalDetails.gender}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, gender: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="date"
+                  placeholder="Date of Birth"
+                  value={personalDetails.dob}
+                  onChange={(e) => setPersonalDetails({ ...personalDetails, dob: e.target.value })}
+                  className="input-field"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200 w-fit self-end"
+              >
+                Update Profile
+              </button>
+            </form>
           )}
 
-          {activeTab === 'orders' && (
-            <div className="profile-section">
-              <h2>Order History</h2>
-              <div className="orders-list">
-                {orders.map(order => (
-                  <div key={order.id} className="order-card">
-                    <div className="order-header">
-                      <div>
-                        <h3>Order #{order.id}</h3>
-                        <p>Placed on {order.date}</p>
-                      </div>
-                      <span className={`order-status ${order.status.toLowerCase()}`}>
-                        {order.status}
-                      </span>
-                    </div>
-                    <div className="order-details">
-                      <p>{order.items} items</p>
-                      <p className="order-total">${order.total.toFixed(2)}</p>
-                    </div>
-                    <button className="view-order">View Details</button>
-                  </div>
-                ))}
+          {activeTab === 'address' && (
+            <form onSubmit={handleAddressUpdate} className="space-y-4 mt-6">
+              <h2 className="text-xl font-bold mb-4 text-blue-700">Address Details</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Address Line 1"
+                  value={addressDetails.addressLine1}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, addressLine1: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="Address Line 2"
+                  value={addressDetails.addressLine2}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, addressLine2: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="City"
+                  value={addressDetails.city}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, city: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="State"
+                  value={addressDetails.state}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, state: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="ZIP Code"
+                  value={addressDetails.zip}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, zip: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="Country"
+                  value={addressDetails.country}
+                  onChange={(e) => setAddressDetails({ ...addressDetails, country: e.target.value })}
+                  className="input-field"
+                />
               </div>
-            </div>
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200 w-fit self-end"
+              >
+                Update Address
+              </button>
+            </form>
           )}
 
-          {activeTab === 'addresses' && (
-            <div className="profile-section">
-              <h2>Saved Addresses</h2>
-              <div className="addresses-list">
-                {addresses.map(address => (
-                  <div key={address.id} className="address-card">
-                    <div className="address-header">
-                      <h3>{address.type}</h3>
-                      {address.isDefault && <span className="default-badge">Default</span>}
-                    </div>
-                    <p>{address.street}</p>
-                    <p>{address.city}, {address.state} {address.zip}</p>
-                    <div className="address-actions">
-                      <button className="edit-address">Edit</button>
-                      <button className="delete-address">Delete</button>
-                      {!address.isDefault && (
-                        <button className="set-default">Set as Default</button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                <button className="add-address">
-                  <i className="fas fa-plus"></i> Add New Address
-                </button>
+          {activeTab === 'payment' && (
+            <form onSubmit={handlePaymentUpdate} className="space-y-4 mt-6">
+              <h2 className="text-xl font-bold mb-4 text-blue-700">Payment Details</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Card Name"
+                  value={paymentDetails.cardName}
+                  onChange={(e) => setPaymentDetails({ ...paymentDetails, cardName: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="Card Number"
+                  value={paymentDetails.cardNumber}
+                  onChange={(e) => setPaymentDetails({ ...paymentDetails, cardNumber: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="Expiry Date (MM/YY)"
+                  value={paymentDetails.expiry}
+                  onChange={(e) => setPaymentDetails({ ...paymentDetails, expiry: e.target.value })}
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  placeholder="CVV"
+                  value={paymentDetails.cvv}
+                  onChange={(e) => setPaymentDetails({ ...paymentDetails, cvv: e.target.value })}
+                  className="input-field"
+                />
               </div>
-            </div>
-          )}
-
-          {activeTab === 'settings' && (
-            <div className="profile-section">
-              <h2>Account Settings</h2>
-              <div className="settings-list">
-                <div className="setting-item">
-                  <div className="setting-info">
-                    <h3>Email Notifications</h3>
-                    <p>Receive updates about your orders and promotions</p>
-                  </div>
-                  <label className="switch">
-                    <input type="checkbox" defaultChecked />
-                    <span className="slider"></span>
-                  </label>
-                </div>
-                <div className="setting-item">
-                  <div className="setting-info">
-                    <h3>Two-Factor Authentication</h3>
-                    <p>Add an extra layer of security to your account</p>
-                  </div>
-                  <label className="switch">
-                    <input type="checkbox" />
-                    <span className="slider"></span>
-                  </label>
-                </div>
-                <div className="setting-item">
-                  <div className="setting-info">
-                    <h3>Change Password</h3>
-                    <p>Update your account password</p>
-                  </div>
-                  <button className="change-password">Change</button>
-                </div>
-              </div>
-            </div>
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200 w-fit self-end"
+              >
+                Update Payment
+              </button>
+            </form>
           )}
         </div>
       </div>
