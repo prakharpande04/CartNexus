@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import logo from "./../assets/logo.png";
+import logo from "./../assets/logos/logo.png";
 import "./styles/Navbar.css";
-import profileLogo from "./../assets/profile-logo.png";
-import cartLogo from "./../assets/cart-logo.png";
-import orderLogo from "./../assets/orders.png";
-import categoriesLogo from "./../assets/categories.png";
-import logoutLogo from "./../assets/logout.png";
-import homeLogo from "./../assets/home.png";
+import profileLogo from "./../assets/logos/profile-logo.png";
+import cartLogo from "./../assets/logos/cart-logo.png";
+import orderLogo from "./../assets/logos/orders.png";
+import categoriesLogo from "./../assets/logos/categories.png";
+import logoutLogo from "./../assets/logos/logout.png";
+import homeLogo from "./../assets/logos/home.png";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
