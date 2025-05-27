@@ -1,212 +1,188 @@
 import React from 'react';
-import './styles/Dashboard.css';
-import { useCart } from '../context/CartContext'; // Adjust path if needed
+import { motion } from 'framer-motion';
+import { useCart } from '../context/CartContext';
 
 function Dashboard() {
   const { setCartCount, cartCount } = useCart();
 
   const featuredProducts = [
-    {
-      id: 1,
-      name: "Premium Wireless Headphones",
-      price: 199.99,
-      image: "https://via.placeholder.com/300",
-      rating: 4.5,
-      reviews: 128
-    },
-    {
-      id: 2,
-      name: "Smart Fitness Watch",
-      price: 149.99,
-      image: "https://via.placeholder.com/300",
-      rating: 4.8,
-      reviews: 256
-    },
-    {
-      id: 3,
-      name: "Ultra HD Camera",
-      price: 299.99,
-      image: "https://via.placeholder.com/300",
-      rating: 4.7,
-      reviews: 89
-    },
-    {
-      id: 4,
-      name: "Wireless Earbuds",
-      price: 79.99,
-      image: "https://via.placeholder.com/300",
-      rating: 4.6,
-      reviews: 342
-    }
+    { id: 1, name: "Smartphone", price: 599.99, image: "https://via.placeholder.com/300x200" },
+    { id: 2, name: "Headphones", price: 199.99, image: "https://via.placeholder.com/300x200" },
+    { id: 3, name: "Smartwatch", price: 299.99, image: "https://via.placeholder.com/300x200" },
   ];
 
   const categories = [
-    {
-      id: 1,
-      name: "Electronics",
-      image: "https://via.placeholder.com/400",
-      count: 150
-    },
-    {
-      id: 2,
-      name: "Fashion",
-      image: "https://via.placeholder.com/400",
-      count: 320
-    },
-    {
-      id: 3,
-      name: "Home & Living",
-      image: "https://via.placeholder.com/400",
-      count: 95
-    },
-    {
-      id: 4,
-      name: "Beauty",
-      image: "https://via.placeholder.com/400",
-      count: 210
-    }
+    { id: 1, name: "Electronics", count: 120, image: "https://via.placeholder.com/300x200" },
+    { id: 2, name: "Fashion", count: 80, image: "https://via.placeholder.com/300x200" },
+    { id: 3, name: "Home & Kitchen", count: 100, image: "https://via.placeholder.com/300x200" },
+    { id: 4, name: "Sports", count: 60, image: "https://via.placeholder.com/300x200" },
   ];
 
-  // Handler to add item to cart (increments cart count)
   const handleAddToCart = () => {
     setCartCount(cartCount + 1);
   };
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
   return (
-    <div className="dashboard-container">
+    <div className="bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white font-sans min-w-screen">
+      
       {/* Hero Section */}
-      <section className="hero">
-        <div className="hero-content">
-          <h1>Welcome to ShopNexus</h1>
-          <p>Discover Amazing Products at Unbeatable Prices</p>
-          <div className="hero-buttons">
-            <button className="primary-button">Shop Now</button>
-            <button className="secondary-button">Learn More</button>
+      <motion.section
+        className="py-20 text-center bg-gradient-to-r from-purple-700 via-blue-600 to-indigo-700 shadow-2xl"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInUp}
+      >
+        <div className="max-w-6xl mx-auto px-4">
+          <motion.h1 className="text-5xl font-extrabold text-white drop-shadow-lg">
+            Welcome to ShopNexus
+          </motion.h1>
+          <p className="mt-4 text-lg text-gray-300">Discover Amazing Products at Unbeatable Prices</p>
+          <div className="mt-6 space-x-4">
+            <motion.button whileHover={{ scale: 1.05 }} className="bg-white text-purple-700 px-6 py-2 rounded-full font-semibold shadow hover:bg-purple-100 transition">
+              Shop Now
+            </motion.button>
+            <motion.button whileHover={{ scale: 1.05 }} className="bg-transparent text-white px-6 py-2 border border-white rounded-full font-semibold hover:bg-white hover:text-indigo-700 transition">
+              Learn More
+            </motion.button>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Features Section */}
-      <section className="features">
-        <div className="feature-card">
-          <i className="fas fa-truck"></i>
-          <h3>Free Shipping</h3>
-          <p>On orders over $50</p>
-        </div>
-        <div className="feature-card">
-          <i className="fas fa-undo"></i>
-          <h3>Easy Returns</h3>
-          <p>30 days return policy</p>
-        </div>
-        <div className="feature-card">
-          <i className="fas fa-lock"></i>
-          <h3>Secure Payment</h3>
-          <p>100% secure checkout</p>
-        </div>
-        <div className="feature-card">
-          <i className="fas fa-headset"></i>
-          <h3>24/7 Support</h3>
-          <p>Dedicated support team</p>
+      <section className="py-16 text-center">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 px-4">
+          {[
+            { icon: "🚚", title: "Free Shipping", desc: "On orders over $50" },
+            { icon: "↩️", title: "Easy Returns", desc: "30 days return policy" },
+            { icon: "🔒", title: "Secure Payment", desc: "100% secure checkout" },
+            { icon: "🎧", title: "24/7 Support", desc: "Dedicated support team" }
+          ].map((feature, index) => (
+            <motion.div
+              key={index}
+              className="bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition duration-300"
+              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <div className="text-5xl mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-bold mb-2 text-white">{feature.title}</h3>
+              <p className="text-sm text-gray-300">{feature.desc}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
       {/* Categories Section */}
-      <section className="categories">
-        <h2>Shop by Category</h2>
-        <div className="categories-grid">
-          {categories.map(category => (
-            <div key={category.id} className="category-card">
-              <img src={category.image} alt={category.name} />
-              <div className="category-info">
-                <h3>{category.name}</h3>
-                <p>{category.count} Products</p>
+      <motion.section
+        className="py-16 bg-gradient-to-r from-gray-800 to-gray-900"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInUp}
+      >
+        <h2 className="text-4xl text-center font-bold text-cyan-300 mb-10">Shop by Category</h2>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+          {categories.map((category) => (
+            <motion.div
+              key={category.id}
+              className="bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"
+              whileHover={{ scale: 1.02 }}
+            >
+              <img src={category.image} alt={category.name} className="w-full h-48 object-cover" />
+              <div className="p-4">
+                <h3 className="text-xl font-bold text-white">{category.name}</h3>
+                <p className="text-sm text-gray-300">{category.count} Products</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      {/* Featured Products Section */}
-      <section className="featured-products">
-        <h2>Featured Products</h2>
-        <div className="products-grid">
-          {featuredProducts.map(product => (
-            <div key={product.id} className="product-card">
-              <div className="product-image">
-                <img src={product.image} alt={product.name} />
-                <div className="product-actions">
-                  <button className="action-button">
-                    <i className="fas fa-heart"></i>
-                  </button>
-                  {/* We can keep or remove this cart icon button. Keeping for UI */}
-                  <button 
-                    className="action-button" 
-                    onClick={handleAddToCart} 
-                    title="Add to cart"
-                  >
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
+      {/* Featured Products */}
+      <motion.section className="py-16 bg-black text-white">
+        <h2 className="text-4xl text-center font-bold text-indigo-300 mb-10">Featured Products</h2>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 px-4">
+          {featuredProducts.map((product, index) => (
+            <motion.div
+              key={product.id}
+              className="bg-gray-800 rounded-xl shadow-md hover:shadow-2xl overflow-hidden"
+              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              transition={{ duration: 0.4, delay: index * 0.2 }}
+            >
+              <div className="relative">
+                <img src={product.image} alt={product.name} className="w-full h-64 object-cover" />
+                <div className="absolute top-4 right-4 space-x-2">
+                  <button className="bg-white/10 backdrop-blur-sm p-2 rounded-full hover:bg-white/20 transition">❤️</button>
+                  <button onClick={handleAddToCart} className="bg-white/10 backdrop-blur-sm p-2 rounded-full hover:bg-white/20 transition">🛒</button>
                 </div>
               </div>
-              <div className="product-info">
-                <h3>{product.name}</h3>
-                <div className="product-rating">
-                  <div className="stars">
-                    {[...Array(5)].map((_, i) => (
-                      <i 
-                        key={i} 
-                        className={`fas fa-star ${i < Math.floor(product.rating) ? 'active' : ''}`}
-                      ></i>
-                    ))}
-                  </div>
-                  <span>({product.reviews})</span>
-                </div>
-                <p className="product-price">${product.price.toFixed(2)}</p>
-                <button 
-                  className="add-to-cart-button" 
+              <div className="p-4">
+                <h3 className="text-xl font-bold">{product.name}</h3>
+                <p className="text-blue-400 mt-2">${product.price.toFixed(2)}</p>
+                <button
                   onClick={handleAddToCart}
-                  aria-label={`Add ${product.name} to cart`}
+                  className="mt-4 w-full py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold transition"
                 >
                   Add to Cart
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      {/* Promotion Banner */}
-      <section className="promotion-banner">
-        <div className="promotion-content">
-          <h2>Special Offer</h2>
-          <p>Get 20% off on your first purchase</p>
-          <button className="promotion-button">Shop Now</button>
-        </div>
-      </section>
+      {/* Promotional Offer */}
+      <motion.section
+        className="py-20 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white text-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <h2 className="text-3xl font-bold mb-4">Special Offer</h2>
+        <p className="text-lg mb-6">Get 20% off on your first purchase</p>
+        <button className="bg-white text-pink-700 px-8 py-3 font-bold rounded-full hover:bg-gray-100 transition">Shop Now</button>
+      </motion.section>
 
-      {/* Newsletter Section */}
-      <section className="newsletter">
-        <div className="newsletter-content">
-          <h2>Subscribe to Our Newsletter</h2>
-          <p>Get the latest updates on new products and upcoming sales</p>
-          <form className="newsletter-form">
-            <input type="email" placeholder="Enter your email" />
-            <button type="submit">Subscribe</button>
-          </form>
-        </div>
-      </section>
+      {/* Newsletter */}
+      <motion.section className="py-20 bg-gray-900 text-center text-white">
+        <h2 className="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+        <p className="mb-8 text-gray-400">Get the latest updates on new products and upcoming sales</p>
+        <form className="flex justify-center">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="px-6 py-2 rounded-l-full border border-gray-600 bg-gray-800 text-white w-64 focus:outline-none"
+          />
+          <button type="submit" className="bg-indigo-500 px-6 py-2 rounded-r-full text-white font-bold hover:bg-indigo-600">Subscribe</button>
+        </form>
+      </motion.section>
 
-      {/* Brands Section */}
-      <section className="brands">
-        <h2>Our Brands</h2>
-        <div className="brands-grid">
-          {[1, 2, 3, 4, 5].map(brand => (
-            <div key={brand} className="brand-logo">
+      {/* Brands */}
+      <motion.section className="py-20 bg-gradient-to-b from-black via-gray-900 to-gray-800">
+        <h2 className="text-3xl text-center font-bold mb-10 text-violet-300">Our Brands</h2>
+        <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 px-4">
+          {[1, 2, 3, 4, 5].map((brand) => (
+            <motion.div
+              key={brand}
+              className="bg-gray-700 p-6 rounded-xl shadow-md hover:shadow-lg transition"
+              whileHover={{ scale: 1.05 }}
+            >
               <img src={`https://via.placeholder.com/150?text=Brand${brand}`} alt={`Brand ${brand}`} />
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
+
+      {/* Footer */}
+      <footer className="bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-700 text-white py-6 text-center">
+        <p className="text-sm">&copy; 2025 ShopNexus. All Rights Reserved.</p>
+      </footer>
     </div>
   );
 }
