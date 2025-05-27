@@ -58,7 +58,7 @@ function Navbar() {
                 <p className="app-title"><a href='http://localhost:5173'>CartNexus</a></p>
             </div>
 
-
+            { isAuthenticated && (
             <div className="search-bar">
                 <input
                     type="text"
@@ -67,6 +67,7 @@ function Navbar() {
                 />
                 <button className="search-button">Search</button>
             </div>
+            )}
 
             <ul className={`nav-menu ${menuOpen ? 'open' : ''}`}>
                 {isAuthenticated ? (
