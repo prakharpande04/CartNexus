@@ -3,11 +3,22 @@ const Address = require("../models/Address");
 
 const login = async (req, res) => {
     try {
-        const { userId } = req.body;
+        console.log("Login request received");
+        const userId = req.params.sub;
         console.log("User ID : ", userId);
 
+        console.log("CP1" + userId);
+
         const user = await User.findOne({ userId: userId });
+        console.log("CP2" + user);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
         const address = await Address.findOne({ userId: userId });
+        console.log("CP3" + address);
+
         return res.status(200).json({ user, address });
     } catch (error) {
         console.error("Error during login:", error);

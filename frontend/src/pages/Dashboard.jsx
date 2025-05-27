@@ -2,10 +2,39 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from 'axios';
+import { useEffect } from 'react';
 
 function Dashboard() {
   const { setCartCount, cartCount } = useCart();
   const navigate = useNavigate();
+  const { user } = useAuth0();
+
+  useEffect(() => {
+    const checkUserLogin = async () => {
+      try{
+        const response = await axios.get(`http://localhost:5000/api/login/${user.sub}`);
+        console.log('Backend response:', response.data);
+        alert("Login Successful");
+        navigate('/dashboard');
+      } 
+      catch (error) {
+          if (error.response) {
+              if (error.response.status === 404) {
+                  navigate('/create-account');
+              } else {
+                  console.error("Server error:", error.response.data.message);
+              }
+          } else {
+              console.error("Network or unexpected error:", error.message);
+          }
+        }
+    };
+    if (user && user.sub) {
+      checkUserLogin();
+    }
+  }, [user, navigate]);
 
   const featuredProducts = [
     { id: 1, name: "Smartphone", price: 599.99, image: "https://via.placeholder.com/300x200" },

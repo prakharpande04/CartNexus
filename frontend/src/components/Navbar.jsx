@@ -132,7 +132,7 @@ function Navbar() {
                 
                 ) : (
                 <li className="navbar-item">
-                    <button onClick={() => loginWithRedirect()} className="login-button">
+                    <button onClick={loginWithRedirect} className="login-button">
                     Login
                     </button>
                 </li>
