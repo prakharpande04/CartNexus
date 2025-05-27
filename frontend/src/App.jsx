@@ -62,7 +62,7 @@ function App() {
         <Routes>
           <Route path="/" element={<PublicRoute element={<Landing />} />} />
           <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-          <Route path="/create-account" element={<PublicRoute element={<Register />} />} />
+          <Route path="/create-account" element={<ProtectedRoute element={<Register />} />} />
           <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />
           <Route path="/orders" element={<ProtectedRoute element={<Orders />} />} />
           <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />

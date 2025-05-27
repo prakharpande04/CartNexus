@@ -1,191 +1,171 @@
 import React, { useState } from 'react';
-const steps = ['Personal Info', 'Account Details', 'Address Info'];
-import { Autocomplete, TextField } from '@mui/material';
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from 'axios';
+const steps = ['Personal Info', 'Address Info', 'Card Info'];
 
+const Register = () => {
+  const { user} = useAuth0();
 
-function Register() {
   const [step, setStep] = useState(1);
-  const [registrationData, setRegistrationData] = useState({
-    userId: '',
-    fullName: '',
-    email: '',
-    phone: '',
-    gender: '',
+
+  const [data, setData] = useState({
+    userId: user?.sub || '', 
+    fullName: user?.name || '', 
+    email: user?.email || '', 
+    phone: '', 
+    gender: '', 
     dob: '',
-    address: {
-      addressLine1: '',
-      addressLine2: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: ''
-    },
-    cardName: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
+    addressLine1: '', 
+    addressLine2: '', 
+    city: '', 
+    state: '', 
+    zip: '', 
+    country: ''
   });
 
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name.startsWith('address.')) {
-      const field = name.split('.')[1];
-      setRegistrationData(prev => ({
-        ...prev,
-        address: {
-          ...prev.address,
-          [field]: value,
-        },
-      }));
-    } else {
-      setRegistrationData(prev => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const validateStep = () => {
-    let tempErrors = {};
-
+  const validate = () => {
+    let err = {};
     if (step === 1) {
-      if (!registrationData.userId.trim()) tempErrors.userId = 'User ID is required';
-      if (!registrationData.fullName.trim()) tempErrors.fullName = 'Full name is required';
-      if (!registrationData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) tempErrors.email = 'Valid email required';
-      if (!registrationData.phone.match(/^\d{10}$/)) tempErrors.phone = '10-digit phone number required';
-      if (!registrationData.gender) tempErrors.gender = 'Gender required';
-      if (!registrationData.dob) tempErrors.dob = 'Date of birth required';
+      if (!data.userId) err.userId = 'Required';
+      if (!data.fullName) err.fullName = 'Required';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) err.email = 'Invalid email';
+      if (!/^\d{10}$/.test(data.phone)) err.phone = 'Invalid phone';
+      if (!data.gender) err.gender = 'Select gender';
+      if (!data.dob) err.dob = 'Required';
+    } else if (step === 2) {
+      if (!data.addressLine1) err.addressLine1 = 'Required';
+      if (!data.city) err.city = 'Required';
+      if (!data.state) err.state = 'Required';
+      if (!data.zip) err.zip = 'Required';
+      if (!data.country) err.country = 'Required';
     }
-
-    if (step === 2) {
-      const a = registrationData.address;
-      if (!a.addressLine1.trim()) tempErrors.addressLine1 = 'Address Line 1 required';
-      if (!a.city.trim()) tempErrors.city = 'City required';
-      if (!a.state.trim()) tempErrors.state = 'State required';
-      if (!a.zip.trim()) tempErrors.zip = 'ZIP Code required';
-      if (!a.country.trim()) tempErrors.country = 'Country required';
-    }
-
-    if (step === 3) {
-      if (!registrationData.cardName.trim()) tempErrors.cardName = 'Cardholder name required';
-      if (!registrationData.cardNumber.match(/^\d{16}$/)) tempErrors.cardNumber = '16-digit card number required';
-      if (!registrationData.expiry.match(/^(0[1-9]|1[0-2])\/\d{2}$/)) tempErrors.expiry = 'Expiry must be MM/YY';
-      if (!registrationData.cvv.match(/^\d{3}$/)) tempErrors.cvv = '3-digit CVV required';
-    }
-
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
+    setErrors(err);
+    return Object.keys(err).length === 0;
   };
 
-  const nextStep = () => {
-    if (validateStep()) {
-      setStep((prev) => prev + 1);
-    }
-  };
+  const nextStep = () => { if (validate()) setStep(step + 1); };
+  const prevStep = () => setStep(step - 1);
 
-  const prevStep = () => setStep((prev) => prev - 1);
-
-  const handleSubmit = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-    if (validateStep()) {
-      console.log('Submitted Data:', registrationData);
-      alert('Registration successful!');
+    if (validate()) {
+      console.log(data);
+
+      await axios.get('http://localhost:5000/')
+      .then(response => {
+        console.log('API is running:', response.data);
+      })
+      .catch(error => {
+        console.error('There was an error connecting to the API!', error);
+      });
+
+      await axios.post('http://localhost:5000/api/register', data)
+        .then(response => {
+          console.log('Registration successful:', response.data);
+          alert('Form submitted successfully!');
+        })
+        .catch(error => {
+          console.error('There was an error registering!', error);
+        }); 
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-8">
+    <div className="min-w-2xl mx-auto mt-23 px-6 py-8 bg-white rounded-2xl shadow-lg text-black">
       <div className="mb-6">
-        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl font-semibold text-gray-700">Step {step} of 2</h2>
+          <p className="text-sm text-gray-500">{steps[step - 1]}</p>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
-            className="bg-blue-600 h-2.5 rounded-full"
-            style={{ width: `${(step / 3) * 100}%` }}
+            className="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
+            style={{ width: `${(step / 2) * 100}%` }}
           ></div>
         </div>
-        <h2 className="text-xl font-semibold">Step {step} of 3</h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={submitForm} className="space-y-4">
         {step === 1 && (
           <>
-            <input name="userId" placeholder="User ID" value={registrationData.userId} onChange={handleChange} className="inputClass" />
-            {errors.userId && <p className="text-red-500 text-sm">{errors.userId}</p>}
-
-            <input name="fullName" placeholder="Full Name" value={registrationData.fullName} onChange={handleChange} className="inputClass" />
-            {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
-
-            <input name="email" placeholder="Email" value={registrationData.email} onChange={handleChange} className="inputClass" />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-
-            <input name="phone" placeholder="Phone" value={registrationData.phone} onChange={handleChange} className="inputClass" />
-            {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
-
-            <select name="gender" value={registrationData.gender} onChange={handleChange} className="inputClass">
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-            {errors.gender && <p className="text-red-500 text-sm">{errors.gender}</p>}
-
-            <input type="date" name="dob" value={registrationData.dob} onChange={handleChange} className="inputClass" />
-            {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
+            <Input label="User ID" name="userId" value={data.userId} onChange={handleChange} error={errors.userId} readOnly disabled/>
+            <Input label="Full Name" name="fullName" value={data.fullName} onChange={handleChange} error={errors.fullName} />
+            <Input label="Email" name="email" value={data.email} onChange={handleChange} error={errors.email} />
+            <Input label="Phone" name="phone" value={data.phone} onChange={handleChange} error={errors.phone} />
+            <Select label="Gender" name="gender" value={data.gender} onChange={handleChange} error={errors.gender} options={['Male', 'Female', 'Other']} />
+            <Input label="Date of Birth" name="dob" type="date" value={data.dob} onChange={handleChange} error={errors.dob} />
           </>
         )}
 
         {step === 2 && (
           <>
-            <input name="address.addressLine1" placeholder="Address Line 1" value={registrationData.address.addressLine1} onChange={handleChange} className="inputClass" />
-            {errors.addressLine1 && <p className="text-red-500 text-sm">{errors.addressLine1}</p>}
-
-            <input name="address.addressLine2" placeholder="Address Line 2" value={registrationData.address.addressLine2} onChange={handleChange} className="inputClass" />
-
-            <input name="address.city" placeholder="City" value={registrationData.address.city} onChange={handleChange} className="inputClass" />
-            {errors.city && <p className="text-red-500 text-sm">{errors.city}</p>}
-
-            <input name="address.state" placeholder="State" value={registrationData.address.state} onChange={handleChange} className="inputClass" />
-            {errors.state && <p className="text-red-500 text-sm">{errors.state}</p>}
-
-            <input name="address.zip" placeholder="ZIP Code" value={registrationData.address.zip} onChange={handleChange} className="inputClass" />
-            {errors.zip && <p className="text-red-500 text-sm">{errors.zip}</p>}
-
-            <input name="address.country" placeholder="Country" value={registrationData.address.country} onChange={handleChange} className="inputClass" />
-            {errors.country && <p className="text-red-500 text-sm">{errors.country}</p>}
+            <Input label="Address Line 1" name="addressLine1" value={data.addressLine1} onChange={handleChange} error={errors.addressLine1} />
+            <Input label="Address Line 2" name="addressLine2" value={data.addressLine2} onChange={handleChange} />
+            <Input label="City" name="city" value={data.city} onChange={handleChange} error={errors.city} />
+            <Input label="State" name="state" value={data.state} onChange={handleChange} error={errors.state} />
+            <Input label="ZIP" name="zip" value={data.zip} onChange={handleChange} error={errors.zip} />
+            <Input label="Country" name="country" value={data.country} onChange={handleChange} error={errors.country} />
           </>
         )}
 
-        {step === 3 && (
-          <>
-            <input name="cardName" placeholder="Cardholder Name" value={registrationData.cardName} onChange={handleChange} className="inputClass" />
-            {errors.cardName && <p className="text-red-500 text-sm">{errors.cardName}</p>}
-
-            <input name="cardNumber" placeholder="Card Number" value={registrationData.cardNumber} onChange={handleChange} className="inputClass" />
-            {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber}</p>}
-
-            <input name="expiry" placeholder="MM/YY" value={registrationData.expiry} onChange={handleChange} className="inputClass" />
-            {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
-
-            <input name="cvv" placeholder="CVV" value={registrationData.cvv} onChange={handleChange} className="inputClass" />
-            {errors.cvv && <p className="text-red-500 text-sm">{errors.cvv}</p>}
-          </>
-        )}
-
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between pt-4">
           {step > 1 && (
-            <button type="button" onClick={prevStep} className="bg-gray-300 px-4 py-2 rounded">Back</button>
+            <button type="button" onClick={prevStep} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800">
+              Back
+            </button>
           )}
-          {step < 3 ? (
-            <button type="button" onClick={nextStep} className="bg-blue-600 text-white px-4 py-2 rounded">Next</button>
+          {step < 2 ? (
+            <button type="button" onClick={nextStep} className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white">
+              Next
+            </button>
           ) : (
-            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Submit</button>
+            <button type="submit" className="px-4 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
+            onSubmit={submitForm}>
+              Submit
+            </button>
           )}
         </div>
       </form>
     </div>
   );
 };
+
+const Input = ({ label, name, value, onChange, error, type = 'text' }) => (
+  <div>
+    <label className="block mb-1 text-sm text-gray-700">{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      className={`w-full px-4 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+    />
+    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+  </div>
+);
+
+const Select = ({ label, name, value, onChange, options, error }) => (
+  <div>
+    <label className="block mb-1 text-sm text-gray-700">{label}</label>
+    <select
+      name={name}
+      value={value}
+      onChange={onChange}
+      className={`w-full px-4 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+    >
+      <option value="">Select</option>
+      {options.map((opt) => (
+        <option key={opt} value={opt}>{opt}</option>
+      ))}
+    </select>
+    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+  </div>
+);
 
 export default Register;

@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
   const { setCartCount, cartCount } = useCart();
+  const navigate = useNavigate();
 
   const featuredProducts = [
     { id: 1, name: "Smartphone", price: 599.99, image: "https://via.placeholder.com/300x200" },
@@ -21,6 +23,11 @@ function Dashboard() {
   const handleAddToCart = () => {
     setCartCount(cartCount + 1);
   };
+
+  const handleRegister = () => {
+    navigate('/create-account');
+  };
+
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -42,7 +49,7 @@ function Dashboard() {
             Welcome to ShopNexus
           </motion.h1>
           <p className="mt-4 text-lg text-gray-300">Discover Amazing Products at Unbeatable Prices</p>
-          <div className="mt-6 space-x-4">
+          <div className="mt-6 space-x-4" onClick={handleRegister}>
             <motion.button whileHover={{ scale: 1.05 }} className="bg-white text-purple-700 px-6 py-2 rounded-full font-semibold shadow hover:bg-purple-100 transition">
               Shop Now
             </motion.button>
