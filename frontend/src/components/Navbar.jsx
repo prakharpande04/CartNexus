@@ -46,6 +46,21 @@ function Navbar() {
         };
     }, []);
 
+    const setSessionCookie = (name, value) => {
+        document.cookie = `${name}=${value}; path=/; SameSite=Strict`;
+    };
+
+    useEffect(() => {
+        if (isAuthenticated && user?.sub) {
+            setSessionCookie('userId', user.sub);
+        }
+    }, [isAuthenticated, user]);
+
+    const handleLogout = () => {
+        deleteCookie('userId');
+        logout();
+    };
+
     return (
         <div className={`navbar ${navbarShadow ? 'navbar-shadow' : ''}`}>
             <button className="menu-button" onClick={toggleMenu}>
@@ -74,7 +89,7 @@ function Navbar() {
                 <>
 
                 <li className="flex flex-col items-center justify-center text-gray-700 hover:text-black cursor-pointer"
-                    onClick={logout}
+                    onClick={handleLogout}
                 >
                     <img src={logoutLogo} alt="LogoutLogo" />
                     <span className="text-xs">Logout</span>
