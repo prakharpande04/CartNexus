@@ -14,7 +14,7 @@ function Dashboard() {
   useEffect(() => {
     const checkUserLogin = async () => {
       try{
-        const response = await axios.get(`http://localhost:5000/api/login/${user.sub}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/login/${user.sub}`);
         console.log('Backend response:', response.data);
         navigate('/dashboard');
       } 
@@ -33,7 +33,7 @@ function Dashboard() {
 
     const fetchProducts = async () => {
       try {
-        const productsResponse = await axios.get('http://localhost:5000/api/products');
+        const productsResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
         setProducts(productsResponse.data);
         console.log('Products fetched:', productsResponse.data);
       } catch (error) {
@@ -58,7 +58,7 @@ function Dashboard() {
     setCartCount(cartCount + 1);
 
     try{
-      const response = await axios.post('http://localhost:5000/api/cart/', {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cart/`, {
         userId: user.sub,
         product: product
       });

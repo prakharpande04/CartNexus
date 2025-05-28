@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react'
 import './App.css'
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate} from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from './components/Navbar'
 import axios from 'axios';
@@ -11,48 +10,17 @@ import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
 
+const { isAuthenticated, user } = useAuth0();
+
 const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth0();
   return isAuthenticated ? element : <Navigate to="/" />;
 };
 
 const PublicRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth0();
   return !isAuthenticated ? element : <Navigate to="/dashboard" />;
 };
 
 function App() {
-  const { user, isAuthenticated } = useAuth0();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const getUserData = async() => {
-      if (isAuthenticated && user){
-        const userData = {
-          uid: user.sub,
-          email: user.email,
-          name: user.name,
-          photo: user.picture
-        };
-
-        try{
-          const response = await axios.post('https://backend-snowy-mu.vercel.app/user', userData, {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-          console.log('User data sent successfully:', response.data);
-          navigate('/dashboard');
-        }
-        catch (error) {
-          console.error('Error sending user data:', error);
-        }
-      }
-    };
-
-    getUserData();
-  }, [isAuthenticated, user]);
-
   return (
     <>
       <div className="nav-container">
@@ -72,4 +40,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

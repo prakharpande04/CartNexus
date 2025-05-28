@@ -23,7 +23,7 @@ function Cart() {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/cart/${userId}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cart/${userId}`);
         const cart = res.data;
 
         if (!cart || !cart.items) {

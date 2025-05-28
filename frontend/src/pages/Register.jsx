@@ -57,7 +57,7 @@ const Register = () => {
     if (validate()) {
       console.log(data);
 
-      await axios.get('http://localhost:5000/')
+      await axios.get(`${import.meta.env.VITE_API_BASE_URL}`)
       .then(response => {
         console.log('API is running:', response.data);
       })
@@ -65,7 +65,7 @@ const Register = () => {
         console.error('There was an error connecting to the API!', error);
       });
 
-      await axios.post('http://localhost:5000/api/register', data)
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/register`, data)
         .then(response => {
           console.log('Registration successful:', response.data);
           alert('Form submitted successfully!');
