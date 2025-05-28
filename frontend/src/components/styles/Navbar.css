@@ -160,7 +160,7 @@
 @media (max-width: 550px) {
     .nav-menu {
         display: none;
-        flex-direction: column;
+        flex-direction: column-reverse;
         gap: 10px;
         position: absolute;
         top: 60px;
@@ -221,7 +221,7 @@
         left: 0;
         right: 0;
         background-color: rgba(255, 255, 255, 0.95);
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-items: center;
         padding: 10px 0;
         gap: 15px;
