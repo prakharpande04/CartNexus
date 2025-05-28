@@ -2,7 +2,10 @@ const Cart = require('../models/Cart');
 const Product = require('../models/Product'); 
 
 const addToCart = async (req, res) => {
-  const { userId, productId, quantity, name, price } = req.body;
+  console.log('Adding to cart:', req.body);
+  const { userId } = req.body;
+  const { productId, name, price } = req.body.product;
+  const quantity = 1; // Default to 1 if not provided
 
   try {
     let cart = await Cart.findOne({ userId });
@@ -18,6 +21,7 @@ const addToCart = async (req, res) => {
     } else {
       cart.items.push({ productId, name, quantity, price }); // ✅ no need for new CartItem
     }
+    console.log("added !!");
 
     // Update totals
     cart.totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);

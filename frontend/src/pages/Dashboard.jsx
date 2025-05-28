@@ -1,22 +1,21 @@
-import React from 'react';
+import React, {useState , useEffect} from 'react';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
-import { useEffect } from 'react';
 
 function Dashboard() {
   const { setCartCount, cartCount } = useCart();
   const navigate = useNavigate();
   const { user } = useAuth0();
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const checkUserLogin = async () => {
       try{
         const response = await axios.get(`http://localhost:5000/api/login/${user.sub}`);
         console.log('Backend response:', response.data);
-        alert("Login Successful");
         navigate('/dashboard');
       } 
       catch (error) {
@@ -31,16 +30,22 @@ function Dashboard() {
           }
         }
     };
+
+    const fetchProducts = async () => {
+      try {
+        const productsResponse = await axios.get('http://localhost:5000/api/products');
+        setProducts(productsResponse.data);
+        console.log('Products fetched:', productsResponse.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
     if (user && user.sub) {
       checkUserLogin();
     }
-  }, [user, navigate]);
-
-  const featuredProducts = [
-    { id: 1, name: "Smartphone", price: 599.99, image: "https://via.placeholder.com/300x200" },
-    { id: 2, name: "Headphones", price: 199.99, image: "https://via.placeholder.com/300x200" },
-    { id: 3, name: "Smartwatch", price: 299.99, image: "https://via.placeholder.com/300x200" },
-  ];
+    fetchProducts();
+  }, [user]);
 
   const categories = [
     { id: 1, name: "Electronics", count: 120, image: "https://via.placeholder.com/300x200" },
@@ -49,8 +54,20 @@ function Dashboard() {
     { id: 4, name: "Sports", count: 60, image: "https://via.placeholder.com/300x200" },
   ];
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async(product) => {
     setCartCount(cartCount + 1);
+
+    try{
+      const response = await axios.post('http://localhost:5000/api/cart/', {
+        userId: user.sub,
+        product: product
+      });
+      console.log('Product added to cart:', response.data);
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+    } finally {
+      alert("Product added to cart successfully!");
+    }
   };
 
   const handleRegister = () => {
@@ -143,26 +160,26 @@ function Dashboard() {
       <motion.section className="py-16 bg-black text-white">
         <h2 className="text-4xl text-center font-bold text-indigo-300 mb-10">Featured Products</h2>
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 px-4">
-          {featuredProducts.map((product, index) => (
+          {products.map((product, index) => (
             <motion.div
-              key={product.id}
+              key={product.productId}
               className="bg-gray-800 rounded-xl shadow-md hover:shadow-2xl overflow-hidden"
               whileInView={{ opacity: 1, y: 0 }}
               initial={{ opacity: 0, y: 30 }}
               transition={{ duration: 0.4, delay: index * 0.2 }}
             >
               <div className="relative">
-                <img src={product.image} alt={product.name} className="w-full h-64 object-cover" />
+                {/* <img src={product.image} alt={product.name} className="w-full h-64 object-cover" /> */}
                 <div className="absolute top-4 right-4 space-x-2">
                   <button className="bg-white/10 backdrop-blur-sm p-2 rounded-full hover:bg-white/20 transition">❤️</button>
-                  <button onClick={handleAddToCart} className="bg-white/10 backdrop-blur-sm p-2 rounded-full hover:bg-white/20 transition">🛒</button>
+                  <button onClick={() => handleAddToCart(product)} className="bg-white/10 backdrop-blur-sm p-2 rounded-full hover:bg-white/20 transition">🛒</button>
                 </div>
               </div>
               <div className="p-4">
                 <h3 className="text-xl font-bold">{product.name}</h3>
                 <p className="text-blue-400 mt-2">${product.price.toFixed(2)}</p>
                 <button
-                  onClick={handleAddToCart}
+                  onClick={() => handleAddToCart(product)}
                   className="mt-4 w-full py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold transition"
                 >
                   Add to Cart

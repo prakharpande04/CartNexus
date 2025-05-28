@@ -10,7 +10,7 @@ import logoutLogo from "./../assets/logos/logout.png";
 import homeLogo from "./../assets/logos/home.png";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
-
+import { deleteCookie } from "../utils/cookie";
 
 function Navbar() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
@@ -20,7 +20,9 @@ function Navbar() {
     const { cartCount } = useCart();
     const navigate = useNavigate();
     
+    
     console.log(user);
+
 
     const handleImageClick = () => {
         setShowLogout(!showLogout);
