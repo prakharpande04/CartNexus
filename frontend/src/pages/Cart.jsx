@@ -62,13 +62,22 @@ function Cart() {
     fetchCartItems();
   }, [userId, setCartCount]);
 
-  const handleQuantityChange = (id, newQuantity) => {
+  const handleQuantityChange = async(id, newQuantity) => {
     if (newQuantity < 1) return;
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, quantity: newQuantity } : item
       )
     );
+
+    // send to backend
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_BASE_URL}/api/cart/${userId}/${id}/${newQuantity}`
+    );
+
+    if (response.status !== 200) {
+      console.error('Error updating cart item:', response.data);
+    }
 
     const currentItem = cartItems.find((item) => item.id === id);
     if (!currentItem) return;

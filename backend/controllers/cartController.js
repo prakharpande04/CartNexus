@@ -77,9 +77,8 @@ const removeFromCart = async (req, res) => {
 };
 
 const updateCartItem = async (req, res) => {
-  const { userId, productId } = req.params;
-  const { quantity } = req.body;
-  console.log(`Updating product ${productId} in cart for user ${userId} with quantity ${quantity}`);
+  const { userId, productId, newQuantity } = req.params;
+  console.log(`Updating product ${productId} in cart for user ${userId} with quantity ${newQuantity}`);
 
   try {
     const cart = await Cart.findOne({ userId });
@@ -92,7 +91,7 @@ const updateCartItem = async (req, res) => {
       return res.status(404).json({ message: 'Item not found in cart' });
     }
 
-    item.quantity = quantity;
+    item.quantity = newQuantity;
 
     // Update totals
     cart.totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);
