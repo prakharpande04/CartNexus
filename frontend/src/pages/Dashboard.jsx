@@ -4,15 +4,18 @@ import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
+import Loader from '../components/Loader';
 
 function Dashboard() {
   const { setCartCount, cartCount } = useCart();
   const navigate = useNavigate();
   const { user } = useAuth0();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkUserLogin = async () => {
+      setLoading(true);
       try{
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/login/${user.sub}`);
         console.log('Backend response:', response.data);
@@ -28,16 +31,21 @@ function Dashboard() {
           } else {
               console.error("Network or unexpected error:", error.message);
           }
+        } finally {
+          setLoading(false);
         }
     };
 
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const productsResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
         setProducts(productsResponse.data);
         console.log('Products fetched:', productsResponse.data);
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -71,7 +79,11 @@ function Dashboard() {
   };
 
   const handleRegister = () => {
-    navigate('/create-account');
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/create-account');
+    }, 2000);
   };
 
 
@@ -81,6 +93,7 @@ function Dashboard() {
   };
 
   return (
+    loading ? <Loader /> :
     <div className="bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white font-sans min-w-screen">
       
       {/* Hero Section */}

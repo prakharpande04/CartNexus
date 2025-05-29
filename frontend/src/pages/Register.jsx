@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
 const steps = ['Personal Info', 'Address Info', 'Card Info'];
+import Loader from '../components/Loader'; // Assuming you have a Loader component
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const { user} = useAuth0();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
 
@@ -13,8 +17,7 @@ const Register = () => {
     fullName: user?.name || '', 
     email: user?.email || '', 
     phone: '', 
-    gender: '', 
-    dob: '',
+    gender: '',
     addressLine1: '', 
     addressLine2: '', 
     city: '', 
@@ -37,7 +40,6 @@ const Register = () => {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) err.email = 'Invalid email';
       if (!/^\d{10}$/.test(data.phone)) err.phone = 'Invalid phone';
       if (!data.gender) err.gender = 'Select gender';
-      if (!data.dob) err.dob = 'Required';
     } else if (step === 2) {
       if (!data.addressLine1) err.addressLine1 = 'Required';
       if (!data.city) err.city = 'Required';
@@ -55,29 +57,24 @@ const Register = () => {
   const submitForm = async (e) => {
     e.preventDefault();
     if (validate()) {
+      setLoading(true);
       console.log(data);
-
-      await axios.get(`${import.meta.env.VITE_API_BASE_URL}`)
-      .then(response => {
-        console.log('API is running:', response.data);
-      })
-      .catch(error => {
-        console.error('There was an error connecting to the API!', error);
-      });
-
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/register`, data)
         .then(response => {
           console.log('Registration successful:', response.data);
           alert('Form submitted successfully!');
+          setLoading(false);
+          navigate('/dashboard'); // Redirect to dashboard
         })
         .catch(error => {
           console.error('There was an error registering!', error);
-        }); 
+        })
     }
   };
 
   return (
-    <div className="min-w-2xl mx-auto mt-23 px-6 py-8 bg-white rounded-2xl shadow-lg text-black">
+    loading ? <Loader /> :
+    <div className="min-w-2xl mx-100 mt-23 px-6 py-8 bg-white rounded-2xl shadow-lg text-black">
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-xl font-semibold text-gray-700">Step {step} of 2</h2>
@@ -99,7 +96,6 @@ const Register = () => {
             <Input label="Email" name="email" value={data.email} onChange={handleChange} error={errors.email} />
             <Input label="Phone" name="phone" value={data.phone} onChange={handleChange} error={errors.phone} />
             <Select label="Gender" name="gender" value={data.gender} onChange={handleChange} error={errors.gender} options={['Male', 'Female', 'Other']} />
-            <Input label="Date of Birth" name="dob" type="date" value={data.dob} onChange={handleChange} error={errors.dob} />
           </>
         )}
 

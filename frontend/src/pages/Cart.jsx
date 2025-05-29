@@ -4,8 +4,10 @@ import { useCart } from '../context/CartContext';
 import { getCookie } from '../utils/cookie';
 import axios from 'axios';
 import { MinusIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import Loader from '../components/Loader'; // Assuming you have a Loader component
 
 function Cart() {
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { cartCount, setCartCount } = useCart();
   const userId = getCookie('userId');
@@ -52,6 +54,8 @@ function Cart() {
         setCartCount(totalQuantity);
       } catch (err) {
         console.error('Error fetching cart items:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -85,6 +89,7 @@ function Cart() {
   };
 
   return (
+    loading ? <Loader /> :
     <div className="min-h-screen min-w-screen bg-gray-50 py-10 px-4 sm:px-8">
       <div className="max-w-7xl mx-auto bg-white shadow-2xl rounded-3xl p-8">
         <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">

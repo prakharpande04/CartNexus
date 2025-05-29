@@ -1,79 +1,113 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import './styles/Profile.css'
+import axios from 'axios';
+import { getCookie } from '../utils/cookie';
+import Loader from '../components/Loader'; // Assuming you have a Loader component
 
 function Profile() {
-  const [userData, setUserData] = useState({
-    userId: 'prakharpande04',
-    fullName: 'Prakhar Pande',
-    email: 'pandeprakhar1801@gmail.com',
-    phone: '8275711340',
-    gender: 'Male',
-    dob: '2024-01-18',
+  const userId = getCookie('userId');
+  const initialUserData = {
+    userId: '',
+    fullName: '',
+    email: '',
+    phone: '',
+    gender: '',
+    avatar: '',
     address: {
-      addressLine1: '1012, Ashirwad Nagar',
-      addressLine2: 'Near NIT Market',
-      city: 'Nagpur',
-      state: 'Maharashtra',
-      zip: '440024',
-      country: 'India'
-    },
-    cardName: 'Prakhar Sanjeev Pande',
-    cardNumber: '4287 8712 3658 1234',
-    expiry: '09/30',
-    cvv: '785',
-  });
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: ''
+    }
+  };
 
-  // Separate states for form inputs
-  const [personalDetails, setPersonalDetails] = useState({
-    fullName: userData.fullName,
-    email: userData.email,
-    phone: userData.phone,
-    gender: userData.gender,
-    dob: userData.dob,
-  });
-
-  const [addressDetails, setAddressDetails] = useState(userData.address);
-
-  const [paymentDetails, setPaymentDetails] = useState({
-    cardName: userData.cardName,
-    cardNumber: userData.cardNumber,
-    expiry: userData.expiry,
-    cvv: userData.cvv,
-  });
+  const [userData, setUserData] = useState(initialUserData);
+  const [personalDetails, setPersonalDetails] = useState(initialUserData);
+  const [addressDetails, setAddressDetails] = useState(initialUserData.address);
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
 
   // Active tab state
   const [activeTab, setActiveTab] = useState('personal');
 
   const handleProfileUpdate = (e) => {
+  setUpdating(true);
   e.preventDefault();
   setUserData((prev) => ({
     ...prev,
     ...personalDetails,
   }));
-  console.log("Personal details updated:", personalDetails);
+
+  // Here you would typically send the updated personal details to your backend
+  const response = axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/user/${userId}`, personalDetails);
+  console.log("Personal details updated:", response.data);
+  setUpdating(false);
 };
 
 const handleAddressUpdate = (e) => {
+  setUpdating(true);
   e.preventDefault();
   setUserData((prev) => ({
     ...prev,
     address: addressDetails,
   }));
-  console.log("Address updated:", addressDetails);
+
+  const response = axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/address/${userId}`, addressDetails);
+  console.log("Address updated:", response.data);
+  setUpdating(false);
 };
 
-const handlePaymentUpdate = (e) => {
-  e.preventDefault();
-  setUserData((prev) => ({
-    ...prev,
-    ...paymentDetails,
-  }));
-  console.log("Payment details updated:", paymentDetails);
-};
+  useEffect(() => {
+    // Simulate fetching user data from an API
+    const fetchUserData = async () => {
+      const fetchedData = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/login/${userId}`); // Replace with your API endpoint
+      const { user, address } = fetchedData.data;
+      console.log("Fetched user data:", user, address); 
 
+      const mergedData = {
+        userId: user.userId || '',
+        fullName: user.fullName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        gender: user.gender || '',
+        avatar: user.avatar || '',
+        address: {
+          addressLine1: address.addressLine1 || '',
+          addressLine2: address.addressLine2 || '',
+          city: address.city || '',
+          state: address.state || '',
+          zip: address.zip || '',
+          country: address.country || ''
+        }
+      };
+      setUserData(mergedData);
+
+      setPersonalDetails({
+        fullName: user.fullName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        gender: user.gender || ''
+      });
+
+      setAddressDetails({
+        addressLine1: address.addressLine1 || '',
+        addressLine2: address.addressLine2 || '',
+        city: address.city || '',
+        state: address.state || '',
+        zip: address.zip || '',
+        country: address.country || ''
+      });
+      setLoading(false);
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
+    loading ? <Loader /> :
     <div className="min-w-screen min-h-screen flex flex-col items-center justify-start p-4 text-black">
       <h1 className="text-4xl font-extrabold text-center text-blue-700 mb-6 underline underline-offset-4 decoration-blue-400">
         Profile
@@ -88,11 +122,10 @@ const handlePaymentUpdate = (e) => {
             alt="Avatar"
             className="w-32 h-32 rounded-lg border-4 object-cover shadow-sm"
           />
-          <h2 className="text-xl font-bold mt-4 text-gray-800">{userData.fullName}</h2>
-          <h4 className="text-sm text-gray-500 mb-6">@{userData.userId}</h4>
+          <h2 className="text-xl font-bold mt-4 mb-6 text-gray-800">{userData.fullName}</h2>
 
           <nav className="w-full flex flex-col gap-2">
-            {['personal', 'address', 'payment'].map((tab) => (
+            {['personal', 'address'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -124,8 +157,8 @@ const handlePaymentUpdate = (e) => {
                   type="email"
                   placeholder="Email"
                   value={personalDetails.email}
-                  onChange={(e) => setPersonalDetails({ ...personalDetails, email: e.target.value })}
-                  className="input-field"
+                  readOnly
+                  className="input-field bg-gray-100 cursor-not-allowed"
                 />
                 <input
                   type="tel"
@@ -141,13 +174,6 @@ const handlePaymentUpdate = (e) => {
                   onChange={(e) => setPersonalDetails({ ...personalDetails, gender: e.target.value })}
                   className="input-field"
                 />
-                <input
-                  type="date"
-                  placeholder="Date of Birth"
-                  value={personalDetails.dob}
-                  onChange={(e) => setPersonalDetails({ ...personalDetails, dob: e.target.value })}
-                  className="input-field"
-                />
               </div>
               <button
                 type="submit"
@@ -159,7 +185,8 @@ const handlePaymentUpdate = (e) => {
           )}
 
           {activeTab === 'address' && (
-            <form onSubmit={handleAddressUpdate} className="space-y-4 mt-6">
+            
+            <form onSubmit={handleAddressUpdate} className="space-y-4">
               <h2 className="text-xl font-bold mb-4 text-blue-700">Address Details</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
@@ -210,48 +237,6 @@ const handlePaymentUpdate = (e) => {
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200 w-fit self-end"
               >
                 Update Address
-              </button>
-            </form>
-          )}
-
-          {activeTab === 'payment' && (
-            <form onSubmit={handlePaymentUpdate} className="space-y-4 mt-6">
-              <h2 className="text-xl font-bold mb-4 text-blue-700">Payment Details</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Card Name"
-                  value={paymentDetails.cardName}
-                  onChange={(e) => setPaymentDetails({ ...paymentDetails, cardName: e.target.value })}
-                  className="input-field"
-                />
-                <input
-                  type="text"
-                  placeholder="Card Number"
-                  value={paymentDetails.cardNumber}
-                  onChange={(e) => setPaymentDetails({ ...paymentDetails, cardNumber: e.target.value })}
-                  className="input-field"
-                />
-                <input
-                  type="text"
-                  placeholder="Expiry Date (MM/YY)"
-                  value={paymentDetails.expiry}
-                  onChange={(e) => setPaymentDetails({ ...paymentDetails, expiry: e.target.value })}
-                  className="input-field"
-                />
-                <input
-                  type="text"
-                  placeholder="CVV"
-                  value={paymentDetails.cvv}
-                  onChange={(e) => setPaymentDetails({ ...paymentDetails, cvv: e.target.value })}
-                  className="input-field"
-                />
-              </div>
-              <button
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200 w-fit self-end"
-              >
-                Update Payment
               </button>
             </form>
           )}
