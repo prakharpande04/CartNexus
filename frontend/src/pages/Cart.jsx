@@ -76,12 +76,22 @@ function Cart() {
     setCartCount(cartCount + diff);
   };
 
-  const handleRemoveItem = (id) => {
-    const itemToRemove = cartItems.find((item) => item.id === id);
+  const handleRemoveItem = async(productId) => {
+    const itemToRemove = cartItems.find((item) => item.id === productId);
     if (!itemToRemove) return;
 
-    setCartCount(cartCount - itemToRemove.quantity);
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/cart/${userId}/${productId}`
+      );
+
+      if (response.status === 200) {
+        setCartCount(cartCount - itemToRemove.quantity);
+        setCartItems(cartItems.filter((item) => item.id !== productId));
+      }
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+    }
   };
 
   const goToMain = () => {
