@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 import { getCookie } from '../utils/cookie';
 import axios from 'axios';
-import { MinusIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
-import Loader from '../components/Loader'; // Assuming you have a Loader component
+import Loader from '../components/Loader';
 
-function Cart() {
+function Checkout() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { cartCount, setCartCount } = useCart();
   const userId = getCookie('userId');
-
   const [cartItems, setCartItems] = useState([]);
 
   const subtotal = cartItems.reduce(
@@ -30,7 +26,6 @@ function Cart() {
 
         if (!cart || !cart.items) {
           setCartItems([]);
-          setCartCount(0);
           return;
         }
 
@@ -46,12 +41,6 @@ function Cart() {
         });
 
         setCartItems(allItems);
-
-        const totalQuantity = allItems.reduce(
-          (acc, item) => acc + (item.quantity ?? 0),
-          0
-        );
-        setCartCount(totalQuantity);
       } catch (err) {
         console.error('Error fetching cart items:', err);
       } finally {
@@ -60,75 +49,56 @@ function Cart() {
     };
 
     fetchCartItems();
-  }, [userId, setCartCount]);
+  }, [userId]);
 
-  const handleQuantityChange = async(id, newQuantity) => {
-    if (newQuantity < 1) return;
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-
-    // send to backend
-    const response = await axios.put(
-      `${import.meta.env.VITE_API_BASE_URL}/api/cart/${userId}/${id}/${newQuantity}`
-    );
-
-    if (response.status !== 200) {
-      console.error('Error updating cart item:', response.data);
-    }
-
-    const currentItem = cartItems.find((item) => item.id === id);
-    if (!currentItem) return;
-    const diff = newQuantity - currentItem.quantity;
-    setCartCount(cartCount + diff);
-  };
-
-  const handleRemoveItem = async(productId) => {
-    const itemToRemove = cartItems.find((item) => item.id === productId);
-    if (!itemToRemove) return;
-
+  const handlePayment = async() => {
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/api/cart/${userId}/${productId}`
-      );
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/order`, {
+        amount: total.toFixed(2),
+        userId,
+        cartItems
+      });
 
-      if (response.status === 200) {
-        setCartCount(cartCount - itemToRemove.quantity);
-        setCartItems(cartItems.filter((item) => item.id !== productId));
-      }
-    } catch (error) {
-      console.error('Error removing item from cart:', error);
+      const paymentSessionId = res.data.payment_session_id;
+
+      // Load Cashfree Checkout.js
+      const script = document.createElement('script');
+      script.src = 'https://sdk.cashfree.com/js/ui/2.0.0/cashfree.prod.js';
+      script.onload = () => {
+        const cashfree = new window.Cashfree(paymentSessionId);
+        cashfree.redirect();
+      };
+      document.body.appendChild(script);
+    } catch (err) {
+      console.error('Payment initialization failed', err);
     }
   };
 
-  const goToMain = () => {
-    navigate('/dashboard');
+  const goToCart = () => {
+    navigate('/cart');
   };
 
-  return (
-    loading ? <Loader /> :
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="min-h-screen min-w-screen bg-gray-50 py-10 px-4 sm:px-8">
       <div className="max-w-7xl mx-auto bg-white shadow-2xl rounded-3xl p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
-          🛒 Your Shopping Cart
-        </h1>
+        <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">🧾 Checkout</h1>
 
         {cartItems.length === 0 ? (
           <div className="text-center py-20">
-            <h2 className="text-2xl font-semibold text-gray-700">Your cart is empty</h2>
-            <p className="text-gray-500 mt-2">Add some items to your cart to see them here.</p>
+            <h2 className="text-2xl font-semibold text-gray-700">No items in cart</h2>
+            <p className="text-gray-500 mt-2">Please add items to cart before checking out.</p>
             <button
-              onClick={goToMain}
+              onClick={goToCart}
               className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
             >
-              Continue Shopping
+              Go to Cart
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Cart Items */}
+            {/* Cart Items Summary */}
             <div className="lg:col-span-2 space-y-6">
               {cartItems.map((item) => (
                 <div
@@ -152,39 +122,15 @@ function Cart() {
                       <p className="text-sm text-gray-500">${item.price.toFixed(2)}</p>
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                      className="bg-gray-200 p-2 rounded hover:bg-gray-300"
-                    >
-                      <MinusIcon className="h-5 w-5 text-gray-700" />
-                    </button>
-                    <span className="text-lg font-semibold text-gray-800">{item.quantity}</span>
-                    <button
-                      onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                      className="bg-gray-200 p-2 rounded hover:bg-gray-300"
-                    >
-                      <PlusIcon className="h-5 w-5 text-gray-700" />
-                    </button>
-                  </div>
-
+                  <div className="text-lg text-gray-700">Qty: {item.quantity}</div>
                   <div className="text-lg font-semibold text-gray-900">
                     ${(item.price * item.quantity).toFixed(2)}
                   </div>
-
-                  <button
-                    onClick={() => handleRemoveItem(item.id)}
-                    className="text-red-500 hover:text-red-700"
-                    aria-label={`Remove ${item.name}`}
-                  >
-                    <TrashIcon className="h-6 w-6" />
-                  </button>
                 </div>
               ))}
             </div>
 
-            {/* Summary */}
+            {/* Summary Section */}
             <div className="bg-gray-100 p-6 rounded-2xl shadow-inner">
               <h2 className="text-2xl font-bold mb-4 text-gray-800">Order Summary</h2>
               <div className="space-y-4 text-gray-600 text-base">
@@ -206,16 +152,17 @@ function Cart() {
                 </div>
               </div>
 
-              <button className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-full transition font-medium text-lg"
-                onClick={() => navigate('/checkout')}
+              <button
+                onClick={handlePayment}
+                className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-full transition font-medium text-lg"
               >
-                Proceed to Checkout
+                Proceed to Payment
               </button>
               <button
-                onClick={goToMain}
+                onClick={goToCart}
                 className="mt-3 w-full text-blue-600 hover:text-blue-800 text-sm underline"
               >
-                Continue Shopping
+                Back to Cart
               </button>
             </div>
           </div>
@@ -225,4 +172,4 @@ function Cart() {
   );
 }
 
-export default Cart;
+export default Checkout;

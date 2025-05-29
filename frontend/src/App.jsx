@@ -8,6 +8,7 @@ import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
+import Checkout from './pages/Checkout';
 
 const ProtectedRoute = ({ element }) => {
   const { isAuthenticated } = useAuth0();
@@ -33,6 +34,7 @@ function App() {
           <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />
           <Route path="/orders" element={<ProtectedRoute element={<Orders />} />} />
           <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+          <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
         </Routes>
       </div>
     </>
