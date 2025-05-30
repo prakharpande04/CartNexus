@@ -82,8 +82,9 @@ function Checkout() {
   }, [userId]);
 
   const verifyPayment = async(orderID) => {
+    console.log('Verifying payment for order ID:', orderID);
+
     try {
-      console.log('Verifying payment for order ID:', orderID);
       const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/verify`, {
         orderId: orderID
       });
@@ -104,6 +105,7 @@ function Checkout() {
         redirectTarget: '_modal', // or '_blank' for new tab
       }
 
+      console.log("payment for orderId:", orderId);
       if (cashfree.current) {
         cashfree.current.checkout(checkoutOptions)
         .then((response) => {
