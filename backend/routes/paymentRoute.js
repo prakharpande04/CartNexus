@@ -4,6 +4,6 @@ const router = express.Router();
 const paymentController = require("../controllers/paymentController");
 
 router.get("/api/cashfree/session", paymentController.getSessionId);
-router.post("/api/cashfree/verify", paymentController.verifyPayment);
+router.get("/api/cashfree/verify/:orderId", paymentController.verifyPayment);
 
 module.exports = router;

@@ -51,8 +51,7 @@ exports.getSessionId = getSessionId;
 
 
 const verifyPayment = (req, res) => {
-    console.log(req.body);
-    const { orderId } = req.body;
+    const { orderId } = req.params;
     console.log("Verifying payment for order ID:", orderId);
 
     cashfree.PGOrderFetchPayments(orderId)

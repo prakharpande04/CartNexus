@@ -85,9 +85,7 @@ function Checkout() {
     console.log('Verifying payment for order ID:', orderID);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/verify`, {
-        orderId: orderID
-      });
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/verify/${orderID}`);
       console.log('Payment verification response:', res.data.message);
     } catch (error) {
       console.error('Error verifying payment:', error); 
