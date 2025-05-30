@@ -51,6 +51,7 @@ exports.getSessionId = getSessionId;
 
 
 const verifyPayment = (req, res) => {
+    console.log(req.body);
     const { orderId } = req.body;
     console.log("Verifying payment for order ID:", orderId);
 
