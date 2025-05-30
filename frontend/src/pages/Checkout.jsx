@@ -95,8 +95,7 @@ function Checkout() {
   const handlePayment = async(e) => {
     try {
       let sessionId = await getSessionId();
-      console.log('Session ID:', sessionId);
-      console.log("Order ID:", orderId);
+      console.log('Session ID:', sessionId, 'for order ID:', orderId);
 
       const checkoutOptions = {
         orderId: orderId,
