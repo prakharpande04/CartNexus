@@ -16,7 +16,7 @@ function Checkout() {
   const getSessionId = async() => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/session`);
-      console.log('Cashfree session ID:', res.data);
+      console.log('Cashfree session ID:', res.data.order_id);
       setOrderId(res.data.order_id);
       return res.data.payment_session_id;
     } catch (error) {
