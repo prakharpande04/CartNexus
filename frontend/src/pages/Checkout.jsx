@@ -22,6 +22,8 @@ function Checkout() {
       console.log('Order ID type:', typeof order);
 
       setOrderId(order);
+      console.log('Order ID set in state:', orderId);
+      
       return res.data.payment_session_id;
     } catch (error) {
       console.error('Error fetching Cashfree session ID:', error);
