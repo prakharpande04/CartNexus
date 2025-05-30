@@ -16,15 +16,13 @@ function Checkout() {
   const getSessionId = async() => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/session`);
+      const { order_id, payment_session_id } = res.data;
       console.log('Cashfree session ID:', res.data.order_id);
-      const order = res.data.order_id;
-      // type of order variable
-      console.log('Order ID type:', typeof order);
 
-      setOrderId(order);
+      setOrderId(order_id);
       console.log('Order ID set in state:', orderId);
-      
-      return res.data.payment_session_id;
+
+      return { orderId: order_id, sessionId: payment_session_id };
     } catch (error) {
       console.error('Error fetching Cashfree session ID:', error);
       throw error;
@@ -100,7 +98,7 @@ function Checkout() {
 
   const handlePayment = async(e) => {
     try {
-      let sessionId = await getSessionId();
+      const { orderId, sessionId } = await getSessionId();
       console.log('Session ID:', sessionId, 'for order ID:', orderId);
 
       const checkoutOptions = {
