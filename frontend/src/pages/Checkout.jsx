@@ -81,10 +81,10 @@ function Checkout() {
     fetchCartItems();
   }, [userId]);
 
-  const verifyPayment = async() => {
+  const verifyPayment = async(orderID) => {
     try {
       const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/verify`, {
-        orderId: orderId
+        orderId: orderID
       });
       console.log('Payment verification response:', res.data.message);
     } catch (error) {
@@ -108,7 +108,7 @@ function Checkout() {
         .then((response) => {
           console.log('Cashfree checkout response:', response);
           // Use the orderId from the state at the time of session creation
-          verifyPayment(); 
+          verifyPayment(orderId); 
         })
         .catch((error) => {
           console.error('Cashfree checkout error:', error);

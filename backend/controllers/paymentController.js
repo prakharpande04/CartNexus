@@ -48,7 +48,8 @@ const getSessionId = async(req, res) => {
 
 exports.getSessionId = getSessionId;
 
-// Optional dummy function
+
+
 const verifyPayment = (req, res) => {
     const { orderId } = req.body;
     console.log("Verifying payment for order ID:", orderId);
