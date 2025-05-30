@@ -9,6 +9,7 @@ import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
 import Checkout from './pages/Checkout';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 const ProtectedRoute = ({ element }) => {
   const { isAuthenticated } = useAuth0();
@@ -35,6 +36,7 @@ function App() {
           <Route path="/orders" element={<ProtectedRoute element={<Orders />} />} />
           <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
           <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
+          <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
         </Routes>
       </div>
     </>

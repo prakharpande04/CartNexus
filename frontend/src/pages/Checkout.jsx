@@ -1,14 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../utils/cookie';
 import axios from 'axios';
 import Loader from '../components/Loader';
+import {load} from '@cashfreepayments/cashfree-js';
 
 function Checkout() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const userId = getCookie('userId');
   const [cartItems, setCartItems] = useState([]);
+  const [orderId, setOrderId] = useState('');
+  const cashfree = useRef(null);
+
+  const getSessionId = async() => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/session`);
+      console.log('Cashfree session ID:', res.data);
+      setOrderId(res.data.order_id);
+      return res.data.payment_session_id;
+    } catch (error) {
+      console.error('Error fetching Cashfree session ID:', error);
+      throw error;
+    }
+  };
 
   const subtotal = cartItems.reduce(
     (total, item) => total + (item.price ?? 0) * (item.quantity ?? 0),
@@ -17,6 +32,21 @@ function Checkout() {
   const shipping = 10;
   const tax = subtotal * 0.18;
   const total = subtotal + shipping + tax;
+
+  useEffect(() => {
+    const initializeSDK = async() => {
+    try {
+      cashfree.current = await load({
+        mode: 'production', // or 'TEST' for testing environment
+      });
+      console.log('Cashfree SDK initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Cashfree SDK:', error);
+      throw error;
+    }
+  };
+  initializeSDK();
+  }, []);
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -51,24 +81,41 @@ function Checkout() {
     fetchCartItems();
   }, [userId]);
 
-  const handlePayment = async() => {
+  const verifyPayment = async() => {
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/order`, {
-        amount: total.toFixed(2),
-        userId,
-        cartItems
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/verify`, {
+        orderId: orderId
       });
+      console.log('Payment verification response:', res.data.message);
+    } catch (error) {
+      console.error('Error verifying payment:', error); 
+    }
+  };
 
-      const paymentSessionId = res.data.payment_session_id;
+  const handlePayment = async(e) => {
+    try {
+      let sessionId = await getSessionId();
+      console.log('Session ID:', sessionId);
 
-      // Load Cashfree Checkout.js
-      const script = document.createElement('script');
-      script.src = 'https://sdk.cashfree.com/js/ui/2.0.0/cashfree.prod.js';
-      script.onload = () => {
-        const cashfree = new window.Cashfree(paymentSessionId);
-        cashfree.redirect();
-      };
-      document.body.appendChild(script);
+      const checkoutOptions = {
+        orderId: orderId,
+        paymentSessionId: sessionId,
+        redirectTarget: '_modal', // or '_blank' for new tab
+      }
+
+      if (cashfree.current) {
+        cashfree.current.checkout(checkoutOptions)
+        .then((response) => {
+          console.log('Cashfree checkout response:', response);
+          // Use the orderId from the state at the time of session creation
+          verifyPayment(); 
+        })
+        .catch((error) => {
+          console.error('Cashfree checkout error:', error);
+        });
+      } else {
+        console.error("Cashfree SDK has not been initialized.");
+      }
     } catch (err) {
       console.error('Payment initialization failed', err);
     }

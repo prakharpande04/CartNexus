@@ -5,6 +5,7 @@ const connectDB = require("./dbConfig/dbConfig");
 const userRouter = require("./routes/userRoute");
 const cartRouter = require("./routes/cartRoute");
 const productRouter = require("./routes/productRoute");
+const paymentRouter = require("./routes/paymentRoute");
 
 const app = express();
 const PORT = 5000;
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(userRouter);
 app.use(cartRouter);
 app.use(productRouter);
+app.use(paymentRouter);
 
 app.get("/", async (req, res) => {
   res.send("API is running...");
