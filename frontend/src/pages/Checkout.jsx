@@ -83,6 +83,7 @@ function Checkout() {
 
   const verifyPayment = async(orderID) => {
     try {
+      console.log('Verifying payment for order ID:', orderID);
       const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/verify`, {
         orderId: orderID
       });
