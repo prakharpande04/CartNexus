@@ -72,7 +72,7 @@ function Navbar() {
 
             <div className="nav-logo">
                 <img src={logo} alt="Logo" className="logo" />
-                <p className="app-title"><a href='http://localhost:5173'>CartNexus</a></p>
+                <p className="app-title"><a href='http://localhost:5173'>ShopNexus</a></p>
             </div>
 
             { isAuthenticated && (
@@ -93,14 +93,14 @@ function Navbar() {
                 <li className="flex flex-col items-center justify-center text-gray-700 hover:text-black cursor-pointer"
                     onClick={handleLogout}
                 >
-                    <img src={logoutLogo} alt="LogoutLogo" />
+                    <img src={logoutLogo} alt="LogoutLogo" className="navIcons"/>
                     <span className="text-xs">Logout</span>
                 </li>
 
                 <li className="flex flex-col items-center justify-center text-gray-700 hover:text-black cursor-pointer"
                     onClick={() => navigate('/profile')}
                 >
-                    <img src={profileLogo} alt={user.name} />
+                    <img src={profileLogo} alt={user.name} className="navIcons"/>
                     <span className="text-xs">My Account</span>
                 </li>
 
@@ -108,7 +108,7 @@ function Navbar() {
                 <li className="relative flex flex-col items-center justify-center text-gray-700 hover:text-black cursor-pointer"
                     onClick={() => navigate('/cart')}
                 >
-                    <img src={cartLogo} alt="CartLogo" className="w-6 h-6" />
+                    <img src={cartLogo} alt="CartLogo" className="navIcons"/>
                     <span className="text-xs">Cart</span>
 
                     {/* Badge */}
@@ -120,13 +120,13 @@ function Navbar() {
                 <li className="flex flex-col items-center justify-center text-gray-700 hover:text-black cursor-pointer"
                     onClick={() => navigate('/orders')}
                 >
-                    <img src={orderLogo} alt="OrdersLogo" />
+                    <img src={orderLogo} alt="OrdersLogo" className="navIcons"/>
                     <span className="text-xs">Orders</span>
                 </li>
 
                 <li className="group relative text-gray-700 hover:text-black cursor-pointer">
                     <div className="flex flex-col items-center justify-center">
-                        <img src={categoriesLogo} alt="CategoriesLogo" />
+                        <img src={categoriesLogo} alt="CategoriesLogo" className="navIcons"/>
                         <span className="text-xs">Categories</span>
                     </div>
 
@@ -141,7 +141,7 @@ function Navbar() {
                 <li className="flex flex-col items-center justify-center text-gray-700 hover:text-black cursor-pointer"
                     onClick={() => navigate('/')}
                 >
-                    <img src={homeLogo} alt="HomeLogo" />
+                    <img src={homeLogo} alt="HomeLogo" className="navIcons"/>
                     <span className="text-xs">Home</span>
                 </li>
 
