@@ -96,6 +96,7 @@ function Checkout() {
     try {
       let sessionId = await getSessionId();
       console.log('Session ID:', sessionId);
+      console.log("Order ID:", orderId);
 
       const checkoutOptions = {
         orderId: orderId,
