@@ -170,7 +170,7 @@ function Cart() {
                   </div>
 
                   <div className="text-lg font-semibold text-gray-900">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ₹{(item.price * item.quantity).toFixed(2)}
                   </div>
 
                   <button
@@ -190,19 +190,19 @@ function Cart() {
               <div className="space-y-4 text-gray-600 text-base">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span>${shipping.toFixed(2)}</span>
+                  <span>₹{shipping.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Tax (18%)</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>₹{tax.toFixed(2)}</span>
                 </div>
                 <div className="border-t pt-4 mt-4 flex justify-between text-xl font-semibold text-gray-900">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>₹{total.toFixed(2)}</span>
                 </div>
               </div>
 

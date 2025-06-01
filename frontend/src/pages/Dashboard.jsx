@@ -124,7 +124,7 @@ function Dashboard() {
       <section className="py-16 text-center">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 px-4">
           {[
-            { icon: "🚚", title: "Free Shipping", desc: "On orders over $50" },
+            { icon: "🚚", title: "Free Shipping", desc: "On orders over ₹499" },
             { icon: "↩️", title: "Easy Returns", desc: "30 days return policy" },
             { icon: "🔒", title: "Secure Payment", desc: "100% secure checkout" },
             { icon: "🎧", title: "24/7 Support", desc: "Dedicated support team" }
@@ -191,7 +191,7 @@ function Dashboard() {
               </div>
               <div className="p-4">
                 <h3 className="text-xl font-bold">{product.name}</h3>
-                <p className="text-blue-400 mt-2">${product.price.toFixed(2)}</p>
+                <p className="text-blue-400 mt-2">₹{product.price.toFixed(2)}</p>
                 <button
                   onClick={() => handleAddToCart(product)}
                   className="mt-4 w-full py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold transition"
