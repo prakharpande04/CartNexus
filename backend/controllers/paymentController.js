@@ -21,10 +21,10 @@ const getSessionId = async(req, res) => {
 		order_amount: "1",
 		order_currency: "INR",
 		customer_details: {
-			customer_id: "node_sdk_test",
-			customer_name: "",
-			customer_email: "example@gmail.com",
-			customer_phone: "9999999999",
+			customer_id: "prakharpande04",
+			customer_name: "Prakhar Pande",
+			customer_email: "pandeprakhar1801@gmail.com",
+			customer_phone: "8275711340",
 		},
 		order_meta: {
 			return_url:

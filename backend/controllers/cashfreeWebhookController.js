@@ -7,7 +7,7 @@ const CASHFREE_WEBHOOK = process.env.CASHFREE_WEBHOOK;
 exports.handleCashfreeWebhook = async (req, res) => {
   try {
     const signature = req.headers['x-webhook-signature'];
-    const body = JSON.stringify(req.body);
+    const body = req.body;
     console.log('request received:', body);
     console.log('signature received:', signature);
 
@@ -23,8 +23,9 @@ exports.handleCashfreeWebhook = async (req, res) => {
     }
     console.log('Signature verified successfully');
 
-    const event = req.body.event;
-    const data = req.body.data;
+    const parsedBody = JSON.parse(body);
+    const event = parsedBody.event;
+    const data = parsedBody.data;
 
     if (event === 'PAYMENT_SUCCESS_WEBHOOK') {
       const paymentInfo = {
