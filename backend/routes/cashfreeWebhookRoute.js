@@ -4,5 +4,8 @@ const { handleCashfreeWebhook } = require('../controllers/cashfreeWebhookControl
 
 // Webhook POST endpoint
 router.post('/api/webhook/cashfree', handleCashfreeWebhook);
+router.get('/api/webhook/cashfree', (req, res) => {
+  res.status(200).send('Cashfree webhook endpoint is active');
+});
 
 module.exports = router;
