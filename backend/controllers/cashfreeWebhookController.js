@@ -25,7 +25,7 @@ exports.handleCashfreeWebhook = async (req, res) => {
 
     // Step 2: Parse the body
     const parsedBody = JSON.parse(rawBody.toString('utf8'));
-    const event = parsedBody.event;
+    const event = parsedBody.type;
     const data = parsedBody.data;
     console.log('Parsed event:', event);
     console.log('Parsed data:', data);
