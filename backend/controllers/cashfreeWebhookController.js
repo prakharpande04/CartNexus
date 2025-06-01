@@ -8,16 +8,20 @@ exports.handleCashfreeWebhook = async (req, res) => {
   try {
     const signature = req.headers['x-webhook-signature'];
     const body = JSON.stringify(req.body);
+    console.log('request received:', body);
+    console.log('signature received:', signature);
 
     // Step 1: Verify signature
     const expectedSignature = crypto
       .createHmac('sha256', CASHFREE_WEBHOOK)
       .update(body)
       .digest('base64');
+    console.log('expected signature:', expectedSignature);
 
     if (signature !== expectedSignature) {
       return res.status(401).json({ message: 'Invalid signature' });
     }
+    console.log('Signature verified successfully');
 
     const event = req.body.event;
     const data = req.body.data;
@@ -33,10 +37,12 @@ exports.handleCashfreeWebhook = async (req, res) => {
         paymentMethod: data.payment.payment_method,
         paidAt: new Date(data.payment.payment_time),
       };
+      console.log('Payment success data:', paymentInfo);
 
       await OrderPayment.create(paymentInfo);
       console.log('Payment saved:', paymentInfo);
     }
+    console.log('Webhook event processed:', event);
 
     res.status(200).json({ message: 'Webhook received' });
   } catch (err) {
