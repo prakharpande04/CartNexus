@@ -89,10 +89,26 @@ function Checkout() {
     console.log('Verifying payment for order ID:', orderId);
 
     try {
+
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/verify/${orderId}`);
       console.log('Payment verification response:', res.data.message);
-      navigate('/payment-success', { state: { orderId } });
 
+      const orderData = {
+        orderId,
+        userId, // string user ID
+        products: cartItems.map(item => ({
+          product: item.id,  // ObjectId string
+          quantity: item.quantity,
+        })),
+        totalAmount: total,
+        paymentStatus: "Successful", // after successful payment
+      };
+
+    // Send order data to backend
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order`, orderData);
+      setLoading(false);
+      navigate('/payment-success', { state: { orderId } });
+      console.log('Order created successfully:', orderData);
     } catch (error) {
       console.error('Error verifying payment:', error); 
     }
@@ -100,6 +116,7 @@ function Checkout() {
 
   const handlePayment = async(e) => {
     try {
+      setLoading(true);
       const { orderId, sessionId } = await getSessionId();
       console.log('Session ID:', sessionId, 'for order ID:', orderId);
 

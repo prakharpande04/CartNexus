@@ -82,7 +82,8 @@ function Dashboard() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      navigate('/create-account');
+      navigate('/payment-success', { state: { orderId: "ORD123456" } });
+      // navigate('/create-account');
     }, 2000);
   };
 
