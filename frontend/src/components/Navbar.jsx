@@ -17,11 +17,17 @@ function Navbar() {
     const [showLogout, setShowLogout] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [navbarShadow, setNavbarShadow] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const { cartCount } = useCart();
     const navigate = useNavigate();
     
     
     console.log(user);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        navigate(`/search?query=${searchTerm}`);
+    };
 
 
     const handleImageClick = () => {
@@ -81,8 +87,15 @@ function Navbar() {
                     type="text"
                     placeholder="Search..."
                     className="search-input"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button className="search-button">Search</button>
+
+                <button className="search-button"
+                onClick={handleSearch}
+                >
+                    Search
+                </button>
             </div>
             )}
 

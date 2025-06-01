@@ -33,4 +33,22 @@ const getProducts = async (req, res) => {
   }
 };
 
-module.exports = { createProduct, getProducts };
+const searchProducts = async (req, res) => {
+  const { query } = req.params;
+  console.log('Search query:', query);
+
+  try {
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+        { category: { $regex: query, $options: 'i' } },
+      ],
+    });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: 'Search failed' });
+  }
+};
+
+module.exports = { createProduct, getProducts, searchProducts };
