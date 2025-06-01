@@ -1,14 +1,18 @@
 // src/pages/PaymentSuccess.jsx
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 const PaymentSuccess = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const orderId = location?.state?.orderId || new URLSearchParams(location.search).get("orderId");
-
+  const [searchParams] = useSearchParams();
+  const [orderId, setOrderId] = useState("");
   const [countdown, setCountdown] = useState(5);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const orderIdFromUrl = searchParams.get("orderId");
+    setOrderId(orderIdFromUrl);
+  }, [searchParams]);
 
   useEffect(() => {
     if (countdown === 0) {
