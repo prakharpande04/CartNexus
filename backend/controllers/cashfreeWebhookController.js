@@ -27,18 +27,21 @@ exports.handleCashfreeWebhook = async (req, res) => {
     const parsedBody = JSON.parse(rawBody.toString('utf8'));
     const event = parsedBody.event;
     const data = parsedBody.data;
+    console.log('Parsed event:', event);
+    console.log('Parsed data:', data);
 
     if (event === 'PAYMENT_SUCCESS_WEBHOOK') {
       const paymentInfo = {
         userId: data.customer_details?.customer_id || 'guest',
         orderId: data.order?.order_id,
-        paymentId: data.payment?.payment_id,
+        paymentId: data.payment?.cf_payment_id, // ✅ fixed
         amount: parseFloat(data.payment?.payment_amount),
         currency: data.payment?.payment_currency,
         status: data.payment?.payment_status,
-        paymentMethod: data.payment?.payment_method,
+        paymentMethod: data.payment?.payment_group, // ✅ use payment_group for 'upi', 'card', etc.
         paidAt: new Date(data.payment?.payment_time),
       };
+
 
       console.log('📥 Payment success data:', paymentInfo);
       await OrderPayment.create(paymentInfo);
