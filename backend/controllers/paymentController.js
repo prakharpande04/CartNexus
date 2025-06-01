@@ -57,12 +57,7 @@ const verifyPayment = (req, res) => {
     cashfree.PGOrderFetchPayments(orderId)
         .then((response) => {
             console.log("Payment verification response:", response.data);
-            return res.status(200).json({
-                success: true,
-                message: "Payment verified successfully",
-                orderId: orderId,
-                paymentDetails: response.data
-            });
+            return res.redirect(`/payment-success?orderId=${orderId}`);
         })
         .catch((error) => {
             console.error("Error verifying payment:", error.response.data);
@@ -74,3 +69,10 @@ const verifyPayment = (req, res) => {
         });
 }
 exports.verifyPayment = verifyPayment;
+
+// status(200).json({
+//                 success: true,
+//                 message: "Payment verified successfully",
+//                 orderId: orderId,
+//                 paymentDetails: response.data
+//             });
