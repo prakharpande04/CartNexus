@@ -17,6 +17,7 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const [orderId, setOrderId] = useState("");
   const [orderItems, setOrderItems] = useState([]);
+  const [orderAmount, setOrderAmount] = useState(0);
   const [expectedDelivery, setExpectedDelivery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,6 +37,7 @@ const PaymentSuccess = () => {
           console.log("Order details fetched:", res.data);
           setOrderItems(res.data.products || []);
           setExpectedDelivery(res.data.expectedDelivery || "");
+          setOrderAmount(res.data.totalAmount || 0);
         })
         .catch((err) => {
           console.error("Failed to fetch order details:", err);
@@ -77,6 +79,9 @@ const PaymentSuccess = () => {
               </h2>
               <p className="text-sm text-gray-700">
                 <span className="font-medium">Order ID:</span> {orderId}
+              </p>
+              <p className="text-sm text-gray-700">
+                <span className="font-medium">Order Amount:</span> ₹{orderAmount.toFixed(2)}
               </p>
               {expectedDelivery && (
                 <p className="text-sm text-gray-700 flex items-center mt-1">
