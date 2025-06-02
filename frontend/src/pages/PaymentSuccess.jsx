@@ -32,7 +32,7 @@ const PaymentSuccess = () => {
 
     if (orderIdFromUrl) {
       axios
-        .get(`${import.meta.env.VITE_API_BASE_URL}/api/orders/${userId}/${orderIdFromUrl}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/order/${userId}/${orderIdFromUrl}`)
         .then((res) => {
           console.log("Order details fetched:", res.data);
           setOrderItems(res.data.items || []);
