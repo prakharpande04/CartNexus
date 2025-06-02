@@ -111,8 +111,8 @@ function Checkout() {
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order/create`, orderData);
       setLoading(false);
       console.log('Order created successfully:', orderData);
+      console.log('Navigating to payment success page with order ID:', orderId);
       navigate('/payment-success', { state: { orderId } });
-      
     } catch (error) {
       console.error('Error verifying payment:', error); 
     }

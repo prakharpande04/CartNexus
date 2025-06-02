@@ -27,12 +27,12 @@ const PaymentSuccess = () => {
 
 
   useEffect(() => {
-    const orderIdFromUrl = searchParams.get("orderId");
-    setOrderId(orderIdFromUrl || "Unavailable");
+    const orderId = searchParams.get("orderId");
+    setOrderId(orderId || "Unavailable");
 
-    if (orderIdFromUrl) {
+    if (orderId) {
       axios
-        .get(`${import.meta.env.VITE_API_BASE_URL}/api/orderById/${userId}/${orderIdFromUrl}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/orderById/${userId}/${orderId}`)
         .then((res) => {
           console.log("Order details fetched:", res.data);
           setOrderItems(res.data.items || []);
@@ -49,7 +49,7 @@ const PaymentSuccess = () => {
           }
         );
     }
-  }, [searchParams]);
+  }, [searchParams, userId, clearCart]);
 
   const getTotal = () => {
     return orderItems
