@@ -4,18 +4,21 @@ import { getCookie } from '../utils/cookie';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import {load} from '@cashfreepayments/cashfree-js';
+import {useAuth0} from '@auth0/auth0-react'; 
+
 
 function Checkout() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const userId = getCookie('userId');
+  const { user } = useAuth0();
+  const userId = user?.sub || getCookie('userId');
   const [cartItems, setCartItems] = useState([]);
   const [orderId, setOrderId] = useState('');
   const cashfree = useRef(null);
 
   const getSessionId = async() => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/session`);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/session/${userId}/${user?.name}/${user?.email}`);
       const { order_id, payment_session_id } = res.data;
       console.log('Cashfree session ID:', res.data.order_id);
 

@@ -21,10 +21,9 @@ const getSessionId = async(req, res) => {
 		order_amount: "1",
 		order_currency: "INR",
 		customer_details: {
-			customer_id: "prakharpande04",
-			customer_name: "Prakhar Pande",
-			customer_email: "pandeprakhar1801@gmail.com",
-			customer_phone: "8275711340",
+			customer_id: req.params.userId,
+			customer_name: req.params.userName,
+			customer_email: req.params.userEmail,
 		},
 		order_meta: {
 			return_url:
@@ -47,8 +46,6 @@ const getSessionId = async(req, res) => {
 }
 
 exports.getSessionId = getSessionId;
-
-
 
 const verifyPayment = (req, res) => {
     const { orderId } = req.params;
