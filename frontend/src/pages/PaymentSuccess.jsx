@@ -31,6 +31,7 @@ const PaymentSuccess = () => {
     setOrderId(orderId || "Unavailable");
 
     if (orderId) {
+      console.log("Fetching order details for orderId:", orderId, "and userId:", userId);
       axios
         .get(`${import.meta.env.VITE_API_BASE_URL}/api/orderById/${userId}/${orderId}`)
         .then((res) => {
