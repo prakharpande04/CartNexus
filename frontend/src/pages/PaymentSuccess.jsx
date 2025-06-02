@@ -39,18 +39,15 @@ const PaymentSuccess = () => {
           setOrderItems(res.data.products || []);
           setExpectedDelivery(res.data.expectedDelivery || "");
           setOrderAmount(res.data.totalAmount || 0);
-
+          setCartCount(0);
         })
         .catch((err) => {
           console.error("Failed to fetch order details:", err);
           setError("Failed to load order details.");
         })
-        .finally(
-          () => {
-            setCartCount(0);
-            setLoading(false);
-          }
-        );
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [searchParams, userId]);
 
