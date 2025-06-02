@@ -23,7 +23,7 @@ const PaymentSuccess = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const userId = getCookie('userId');
-  const { clearCart } = useCart();
+  const { cartCount, setCartCount } = useCart();
 
 
   useEffect(() => {
@@ -47,12 +47,12 @@ const PaymentSuccess = () => {
         })
         .finally(
           () => {
-            clearCart();
+            setCartCount(0);
             setLoading(false);
           }
         );
     }
-  }, [searchParams, userId, clearCart]);
+  }, [searchParams, userId]);
 
   const getTotal = () => {
     return orderItems
