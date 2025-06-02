@@ -69,9 +69,9 @@ function Checkout() {
         const allItems = cart.items.map((item) => {
           const product = item.productId || {};
           return {
-            id: item._id || product._id,
-            name: item.name || product.name,
-            price: item.price ?? product.price ?? 0,
+            id: product._id ?? item._id,  // Ensure this gets the actual product _id
+            name: product.name ?? item.name,
+            price: product.price ?? item.price ?? 0,
             quantity: item.quantity ?? 1,
             image: product.image || '',
           };
