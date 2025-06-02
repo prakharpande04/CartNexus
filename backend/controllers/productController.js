@@ -23,8 +23,8 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    console.log('Fetching products from the database...');
-    const products = await Product.find();
+    console.log('Fetching 10 random products from the database...');
+    const products = await Product.aggregate([{ $sample: { size: 10 } }]);
     console.log('Fetched products:', products);
     res.status(200).json(products);
   } catch (error) {
