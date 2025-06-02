@@ -12,7 +12,6 @@ import {
 import { getCookie } from '../utils/cookie';
 import {useCart} from '../context/CartContext';
 
-
 const PaymentSuccess = () => {
 
   const [searchParams] = useSearchParams();
@@ -35,7 +34,7 @@ const PaymentSuccess = () => {
         .get(`${import.meta.env.VITE_API_BASE_URL}/api/orderById/${userId}/${orderId}`)
         .then((res) => {
           console.log("Order details fetched:", res.data);
-          setOrderItems(res.data.items || []);
+          setOrderItems(res.data.products || []);
           setExpectedDelivery(res.data.expectedDelivery || "");
         })
         .catch((err) => {
