@@ -11,6 +11,7 @@ exports.createOrder = async (req, res) => {
       paymentStatus = "Completed",
       expectedDelivery,
     } = req.body;
+    userId = userId.replace('|', '_');
 
     if (!orderId || !userId || !products || !totalAmount) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
@@ -21,7 +22,6 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: "Order must contain at least one product" });
     }
 
-    userId = userId.replace('|', '_');
     const newOrder = new Order({
       orderId,
       userId,
@@ -56,6 +56,9 @@ exports.getOrders = async (req, res) => {
     if (!orders || orders.length === 0) {
       return res.status(404).json({ success: false, message: "No orders found" });
     }
+    orders.forEach(order => {
+      order.userId = order.userId.replace('_', '|'); // Convert userId back to original format for response
+    });
 
     res.status(200).json({ success: true, orders });
   } catch (error) {
@@ -72,6 +75,7 @@ exports.getOrderById = async (req, res) => {
 
     // Find the order by userId and orderId
     const order = await Order.findOne({ userId, orderId }).populate("products.product");
+    order.userId = order.userId.replace('_', '|'); // Convert userId back to original format for response
 
     if (!order) {
       return res.status(404).json({ success: false, message: "Order not found" });

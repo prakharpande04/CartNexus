@@ -17,11 +17,12 @@ const generateOrderId = () => {
 
 const getSessionId = async(req, res) => {
     const orderId = generateOrderId();
+    const customer_id = req.params.userId.replace('|', '_');
 	const request = {
 		order_amount: "1",
 		order_currency: "INR",
 		customer_details: {
-			customer_id: req.params.userId,
+			customer_id: customer_id,
 			customer_name: req.params.userName,
 			customer_email: req.params.userEmail,
 		},
@@ -31,6 +32,7 @@ const getSessionId = async(req, res) => {
 		},
 		order_note: "",
 	};
+    console.log("Setting up order request:", request);
 
     cashfree
 		.PGCreateOrder(request)
