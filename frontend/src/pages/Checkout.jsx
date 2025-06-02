@@ -109,6 +109,7 @@ function Checkout() {
       };
 
     // Send order data to backend
+      console.log('Sending create order data to backend:', orderData);
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order/create`, orderData);
       setLoading(false);
       console.log('Order created successfully:', orderData);
