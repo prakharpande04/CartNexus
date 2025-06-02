@@ -112,7 +112,7 @@ function Checkout() {
       setLoading(false);
       console.log('Order created successfully:', orderData);
       console.log('Navigating to payment success page with order ID:', orderId);
-      navigate('/payment-success', { state: { orderId } });
+      navigate(`/payment-success?orderId=${orderId}`);
     } catch (error) {
       console.error('Error verifying payment:', error); 
     }

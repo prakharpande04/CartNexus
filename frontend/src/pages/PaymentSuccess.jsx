@@ -66,7 +66,6 @@ const PaymentSuccess = () => {
         <CheckCircleIcon className="w-24 h-24 text-green-500 mx-auto mb-6" />
         <h1 className="text-4xl font-extrabold text-green-700 mb-2">Payment Successful</h1>
         <p className="text-gray-600 mb-6">Your order has been placed successfully. Thank you for shopping with us!</p>
-
         {loading ? (
           <p className="text-gray-500">Loading order details...</p>
         ) : error ? (
