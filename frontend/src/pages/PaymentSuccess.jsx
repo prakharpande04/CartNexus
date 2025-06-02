@@ -35,10 +35,11 @@ const PaymentSuccess = () => {
       axios
         .get(`${import.meta.env.VITE_API_BASE_URL}/api/orderById/${userId}/${orderId}`)
         .then((res) => {
+          const order = res.data.order;
           console.log("Order details fetched:", res.data);
-          setOrderItems(res.data.products || []);
-          setExpectedDelivery(res.data.expectedDelivery || "");
-          setOrderAmount(res.data.totalAmount || 0);
+          setOrderItems(order.products || []);
+          setExpectedDelivery(order.expectedDelivery?.split("T")[0] || "");
+          setOrderAmount(order.totalAmount || 0);
           setCartCount(0);
           setLoading(false);
         })
@@ -52,11 +53,12 @@ const PaymentSuccess = () => {
 
   return (
     loading ? <Loader /> :
-    <div className="min-h-screen bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen min-w-screen bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center px-4 py-12">
       <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 w-full max-w-2xl text-center animate-fade-in-down">
         <CheckCircleIcon className="w-24 h-24 text-green-500 mx-auto mb-6" />
         <h1 className="text-4xl font-extrabold text-green-700 mb-2">Payment Successful</h1>
         <p className="text-gray-600 mb-6">Your order has been placed successfully. Thank you for shopping with us!</p>
+
         <div className="bg-green-50 p-6 rounded-xl border border-green-200 text-left mb-6">
           <div className="mb-4">
             <h2 className="text-lg font-semibold text-green-700 flex items-center mb-2">
@@ -92,7 +94,7 @@ const PaymentSuccess = () => {
             </ul>
             <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between font-semibold text-gray-800">
               <span>Total</span>
-              <span>₹{orderAmount}</span>
+              <span>₹{orderAmount.toFixed(2)}</span>
             </div>
           </div>
         </div>
