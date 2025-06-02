@@ -105,4 +105,23 @@ const updateCartItem = async (req, res) => {
   }
 };
 
-module.exports = { addToCart, getCart, removeFromCart, updateCartItem };
+const getCount = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const cart = await Cart.findOne({ userId: userId });
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found" });
+        }
+        // count the number of products in cart
+        const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+        console.log("Cart count for user:", userId, "is", count);
+
+        return res.status(200).json({ count });
+    } catch (error) {
+        console.error("Error fetching cart count:", error);
+        return res.status(500).json({ message: "An error occurred" });
+    }
+};
+
+module.exports = { addToCart, getCart, removeFromCart, updateCartItem, getCount };

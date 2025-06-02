@@ -11,6 +11,7 @@ import homeLogo from "./../assets/logos/home.png";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { deleteCookie } from "../utils/cookie";
+import axios from "axios";
 
 function Navbar() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
@@ -18,10 +19,24 @@ function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [navbarShadow, setNavbarShadow] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const { cartCount } = useCart();
+    const { cartCount, setCartCount } = useCart();
     const navigate = useNavigate();
-    
-    
+
+    useEffect(() => {
+        const fetchCartCount = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cart/cartCount/${user?.sub}`);
+                setCartCount(response.data.count);
+            } catch (error) {
+                console.error("Error fetching cart count:", error);
+            }
+        };
+
+        if (isAuthenticated && user?.sub) {
+            fetchCartCount();
+        }
+    }, [isAuthenticated, user, setCartCount]);
+
     console.log(user);
 
     const handleSearch = (e) => {
@@ -38,7 +53,7 @@ function Navbar() {
       setMenuOpen(!menuOpen);
     };
 
-    useEffect(() => {
+    useEffect(async() => {
         const handleScroll = () => {
             if (window.scrollY > 0) {
                 setNavbarShadow(true);
@@ -48,6 +63,9 @@ function Navbar() {
         };
 
         window.addEventListener('scroll', handleScroll);
+
+        // get cart count from backend
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cartCount/${user?.sub}`);
 
         return () => {
             window.removeEventListener('scroll', handleScroll);

@@ -10,6 +10,7 @@ import {
   ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
 import { getCookie } from '../utils/cookie';
+import {useCart} from '../context/CartContext';
 
 
 const PaymentSuccess = () => {
@@ -22,6 +23,8 @@ const PaymentSuccess = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const userId = getCookie('userId');
+  const { clearCart } = useCart();
+
 
   useEffect(() => {
     const orderIdFromUrl = searchParams.get("orderId");
@@ -39,7 +42,12 @@ const PaymentSuccess = () => {
           console.error("Failed to fetch order details:", err);
           setError("Failed to load order details.");
         })
-        .finally(() => setLoading(false));
+        .finally(
+          () => {
+            clearCart();
+            setLoading(false);
+          }
+        );
     }
   }, [searchParams]);
 

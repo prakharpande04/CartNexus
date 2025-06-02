@@ -6,5 +6,5 @@ router.get('/api/cart/:userId', cartController.getCart);
 router.post('/api/cart', cartController.addToCart);
 router.delete('/api/cart/:userId/:productId', cartController.removeFromCart);
 router.put('/api/cart/:userId/:productId/:newQuantity', cartController.updateCartItem);
-
+router.get("/api/cart/cartCount/:userId", cartController.getCount);
 module.exports = router;

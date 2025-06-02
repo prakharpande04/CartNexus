@@ -120,5 +120,4 @@ const updateAddress = async (req, res) => {
     }
 };
 
-
 module.exports = { login, register, updateUser, updateAddress };

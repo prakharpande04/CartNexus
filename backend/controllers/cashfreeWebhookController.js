@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const OrderPayment = require('../models/OrderPayment');
+const Cart = require('../models/Cart');
 const CASHFREE_WEBHOOK = process.env.CASHFREE_WEBHOOK;
 
 exports.handleCashfreeWebhook = async (req, res) => {
@@ -46,6 +47,12 @@ exports.handleCashfreeWebhook = async (req, res) => {
       console.log('📥 Payment success data:', paymentInfo);
       await OrderPayment.create(paymentInfo);
       console.log('💾 Payment saved');
+
+      await Cart.findOneAndUpdate(
+        { userId },
+        { $set: { items: [] } }
+      );
+      console.log('Cart items cleared for user:', userId);
     }
 
     res.status(200).json({ message: 'Webhook received' });

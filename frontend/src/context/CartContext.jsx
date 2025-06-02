@@ -19,3 +19,8 @@ export const useCart = () => {
   }
   return context;
 };
+
+export const clearCart = () => {
+  const { setCartCount } = useCart();
+  setCartCount(0);
+};
