@@ -49,7 +49,7 @@ const PaymentSuccess = () => {
           setLoading(false);
         })
     }
-  }, [searchParams, userId]);
+  }, []);
 
   return (
     loading ? <Loader /> :
