@@ -50,12 +50,6 @@ const PaymentSuccess = () => {
     }
   }, [searchParams, userId]);
 
-  const getTotal = () => {
-    return orderItems
-      .reduce((acc, item) => acc + item.price * item.qty, 0)
-      .toFixed(2);
-  };
-
   return (
     loading ? <Loader /> :
     <div className="min-h-screen bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center px-4 py-12">
