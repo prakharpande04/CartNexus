@@ -25,6 +25,7 @@ const getSessionId = async(req, res) => {
 			customer_id: customer_id,
 			customer_name: req.params.userName,
 			customer_email: req.params.userEmail,
+            customer_phone: "8275711340", // Placeholder, replace with actual phone number if available
 		},
 		order_meta: {
 			return_url:
