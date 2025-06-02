@@ -52,7 +52,8 @@ exports.handleCashfreeWebhook = async (req, res) => {
 
       await Cart.findOneAndUpdate(
         { userId: rawUserId.replace('_', '|') }, // Convert userId from 'user|id' to 'user_id'
-        { $set: { items: [] } }
+        { $set: { items: [] } },
+        { $set: { totalQuantity: 0 } } // Clear the cart items
       );
       console.log('Cart items cleared for user:', rawUserId);
     }
