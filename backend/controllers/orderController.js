@@ -48,6 +48,7 @@ exports.createOrder = async (req, res) => {
 exports.getOrders = async (req, res) => {
   try {
     const { userId } = req.params;
+    userId = userId.replace('|', '_');
 
     // Populate product details in the order
     const orders = await Order.find({ userId }).populate("products.product");
@@ -66,6 +67,7 @@ exports.getOrders = async (req, res) => {
 exports.getOrderById = async (req, res) => {
   try {
     const { userId, orderId } = req.params;
+    userId = userId.replace('|', '_');
     console.log("Fetching order for userId:", userId, "and orderId:", orderId);
 
     // Find the order by userId and orderId
