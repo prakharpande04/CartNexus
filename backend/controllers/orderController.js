@@ -12,6 +12,7 @@ exports.createOrder = async (req, res) => {
       expectedDelivery,
     } = req.body;
     const id = userId.replace('|', '_');
+    console.log("create order received at backend", req.body);
 
     if (!orderId || !id || !products || !totalAmount) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
