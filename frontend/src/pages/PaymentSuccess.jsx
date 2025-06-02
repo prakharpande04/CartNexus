@@ -40,14 +40,13 @@ const PaymentSuccess = () => {
           setExpectedDelivery(res.data.expectedDelivery || "");
           setOrderAmount(res.data.totalAmount || 0);
           setCartCount(0);
+          setLoading(false);
         })
         .catch((err) => {
           console.error("Failed to fetch order details:", err);
           setError("Failed to load order details.");
-        })
-        .finally(() => {
           setLoading(false);
-        });
+        })
     }
   }, [searchParams, userId]);
 
@@ -104,7 +103,7 @@ const PaymentSuccess = () => {
               </ul>
               <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between font-semibold text-gray-800">
                 <span>Total</span>
-                <span>₹{getTotal()}</span>
+                <span>₹{orderAmount}</span>
               </div>
             </div>
           </div>
