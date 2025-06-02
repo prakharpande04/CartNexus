@@ -70,7 +70,7 @@ function Checkout() {
           const product = item.productId || {};
           return {
             id: item._id || product._id,
-            name: item.name || product.name || 'Unnamed product',
+            name: item.name || product.name,
             price: item.price ?? product.price ?? 0,
             quantity: item.quantity ?? 1,
             image: product.image || '',
