@@ -51,7 +51,8 @@ exports.getOrders = async (req, res) => {
     console.log("Fetching orders for userId:", userId);
 
     // Populate product details in the order
-    const orders = await Order.find({ userId }).populate("products.product");
+    const orders = await Order.find({ userId });
+    // .populate("products.product");
 
     if (!orders || orders.length === 0) {
       return res.status(404).json({ success: false, message: "No orders found" });

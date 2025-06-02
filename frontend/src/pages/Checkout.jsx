@@ -100,7 +100,8 @@ function Checkout() {
         orderId,
         userId, // string user ID
         products: cartItems.map(item => ({
-          product: item.id,  // ObjectId string
+          product: item.id,
+          name: item.name,
           quantity: item.quantity,
         })),
         totalAmount: total,

@@ -1,63 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 // import './styles/Orders.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { getCookie } from '../utils/cookie';
 
 function Orders() {
-  const [orders] = useState([
-    {
-      id: "ORD001",
-      date: "2024-02-15",
-      status: "Delivered",
-      total: 299.97,
-      items: [
-        {
-          id: 1,
-          name: "Premium Wireless Headphones",
-          price: 199.99,
-          quantity: 1,
-          image: "https://via.placeholder.com/100"
-        },
-        {
-          id: 2,
-          name: "Wireless Earbuds",
-          price: 99.98,
-          quantity: 2,
-          image: "https://via.placeholder.com/100"
-        }
-      ],
-      shippingAddress: {
-        street: "123 Main St",
-        city: "New York",
-        state: "NY",
-        zip: "10001"
-      },
-      paymentMethod: "Credit Card",
-      trackingNumber: "TRK123456789"
-    },
-    {
-      id: "ORD002",
-      date: "2024-02-10",
-      status: "Processing",
-      total: 149.99,
-      items: [
-        {
-          id: 3,
-          name: "Smart Fitness Watch",
-          price: 149.99,
-          quantity: 1,
-          image: "https://via.placeholder.com/100"
-        }
-      ],
-      shippingAddress: {
-        street: "123 Main St",
-        city: "New York",
-        state: "NY",
-        zip: "10001"
-      },
-      paymentMethod: "PayPal",
-      trackingNumber: null
-    }
-  ]);
+  const [orders, setOrders] = useState([]);
+  const userId = getCookie('userId');
 
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [filter, setFilter] = useState('all');
@@ -71,6 +19,20 @@ function Orders() {
       default: return 'bg-gray-500';
     }
   };
+
+  useEffect(() => {
+    // Simulate fetching orders from an API
+    const fetchOrders = async () => {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/order/${userId}`);
+      if (!response.data || !Array.isArray(response.data)) {
+        console.error('Invalid order data received:', response.data);
+        return;
+      }
+      console.log('Fetched orders:', response.data);
+      setOrders(response.data);
+    };
+    fetchOrders();
+  }, [userId]);
 
   const filteredOrders = orders.filter(order => {
     if (filter === 'all') return true;
