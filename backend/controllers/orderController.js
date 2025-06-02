@@ -21,6 +21,7 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: "Order must contain at least one product" });
     }
 
+    userId = userId.replace('|', '_');
     const newOrder = new Order({
       orderId,
       userId,

@@ -108,10 +108,11 @@ function Checkout() {
       };
 
     // Send order data to backend
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order`, orderData);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order/create`, orderData);
       setLoading(false);
-      navigate('/payment-success', { state: { orderId } });
       console.log('Order created successfully:', orderData);
+      navigate('/payment-success', { state: { orderId } });
+      
     } catch (error) {
       console.error('Error verifying payment:', error); 
     }
