@@ -11,9 +11,9 @@ exports.createOrder = async (req, res) => {
       paymentStatus = "Completed",
       expectedDelivery,
     } = req.body;
-    userId = userId.replace('|', '_');
+    const id = userId.replace('|', '_');
 
-    if (!orderId || !userId || !products || !totalAmount) {
+    if (!orderId || !id || !products || !totalAmount) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
 
@@ -24,7 +24,7 @@ exports.createOrder = async (req, res) => {
 
     const newOrder = new Order({
       orderId,
-      userId,
+      userId : id, // Store userId in the format with underscore
       products,
       totalAmount,
       paymentStatus,
@@ -47,8 +47,8 @@ exports.createOrder = async (req, res) => {
 // Get a specific order by orderId
 exports.getOrders = async (req, res) => {
   try {
-    const { userId } = req.params;
-    userId = userId.replace('|', '_');
+    const userId = req.params.userId.replace('|', '_'); // Convert userId from 'user|id' to 'user_id'
+    console.log("Fetching orders for userId:", userId);
 
     // Populate product details in the order
     const orders = await Order.find({ userId }).populate("products.product");
@@ -69,17 +69,20 @@ exports.getOrders = async (req, res) => {
 
 exports.getOrderById = async (req, res) => {
   try {
-    const { userId, orderId } = req.params;
-    userId = userId.replace('|', '_');
+    const userId = req.params.userId.replace('|', '_'); // Convert userId from 'user|id' to 'user_id'
+    const orderId = req.params.orderId; // Assuming orderId is passed as a parameter
     console.log("Fetching order for userId:", userId, "and orderId:", orderId);
 
     // Find the order by userId and orderId
     const order = await Order.findOne({ userId, orderId }).populate("products.product");
-    order.userId = order.userId.replace('_', '|'); // Convert userId back to original format for response
 
     if (!order) {
       return res.status(404).json({ success: false, message: "Order not found" });
     }
+
+    // Convert userId back to original format for the response
+    order.userId = order.userId.replace('_', '|');
+
     console.log("Order found:", order);
 
     res.status(200).json({ success: true, order });
@@ -87,4 +90,4 @@ exports.getOrderById = async (req, res) => {
     console.error("Error fetching order:", error);
     res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
-}
+};

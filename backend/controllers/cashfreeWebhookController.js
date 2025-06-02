@@ -32,14 +32,16 @@ exports.handleCashfreeWebhook = async (req, res) => {
     console.log('Parsed data:', data);
 
     if (event === 'PAYMENT_SUCCESS_WEBHOOK') {
+      const rawUserId = data.customer_details?.customer_id || 'guest';
+
       const paymentInfo = {
-        userId: data.customer_details?.customer_id || 'guest',
+        userId: rawUserId,
         orderId: data.order?.order_id,
-        paymentId: data.payment?.cf_payment_id, // ✅ fixed
+        paymentId: data.payment?.cf_payment_id,
         amount: parseFloat(data.payment?.payment_amount),
         currency: data.payment?.payment_currency,
         status: data.payment?.payment_status,
-        paymentMethod: data.payment?.payment_group, // ✅ use payment_group for 'upi', 'card', etc.
+        paymentMethod: data.payment?.payment_group,
         paidAt: new Date(data.payment?.payment_time),
       };
 
@@ -49,10 +51,10 @@ exports.handleCashfreeWebhook = async (req, res) => {
       console.log('💾 Payment saved');
 
       await Cart.findOneAndUpdate(
-        { userId },
+        { userId: rawUserId.replace('_', '|') }, // Convert userId from 'user|id' to 'user_id'
         { $set: { items: [] } }
       );
-      console.log('Cart items cleared for user:', userId);
+      console.log('Cart items cleared for user:', rawUserId);
     }
 
     res.status(200).json({ message: 'Webhook received' });
