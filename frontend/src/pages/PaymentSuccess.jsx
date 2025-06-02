@@ -63,51 +63,45 @@ const PaymentSuccess = () => {
         <CheckCircleIcon className="w-24 h-24 text-green-500 mx-auto mb-6" />
         <h1 className="text-4xl font-extrabold text-green-700 mb-2">Payment Successful</h1>
         <p className="text-gray-600 mb-6">Your order has been placed successfully. Thank you for shopping with us!</p>
-        {loading ? (
-          <p className="text-gray-500">Loading order details...</p>
-        ) : error ? (
-          <p className="text-red-500">{error}</p>
-        ) : (
-          <div className="bg-green-50 p-6 rounded-xl border border-green-200 text-left mb-6">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-green-700 flex items-center mb-2">
-                <CubeIcon className="h-5 w-5 mr-2" />
-                Order Details
-              </h2>
-              <p className="text-sm text-gray-700">
-                <span className="font-medium">Order ID:</span> {orderId}
+        <div className="bg-green-50 p-6 rounded-xl border border-green-200 text-left mb-6">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-green-700 flex items-center mb-2">
+              <CubeIcon className="h-5 w-5 mr-2" />
+              Order Details
+            </h2>
+            <p className="text-sm text-gray-700">
+              <span className="font-medium">Order ID:</span> {orderId}
+            </p>
+            <p className="text-sm text-gray-700">
+              <span className="font-medium">Order Amount:</span> ₹{orderAmount.toFixed(2)}
+            </p>
+            {expectedDelivery && (
+              <p className="text-sm text-gray-700 flex items-center mt-1">
+                <CalendarIcon className="h-4 w-4 mr-1 text-gray-500" />
+                Expected Delivery: <strong className="ml-1">{expectedDelivery}</strong>
               </p>
-              <p className="text-sm text-gray-700">
-                <span className="font-medium">Order Amount:</span> ₹{orderAmount.toFixed(2)}
-              </p>
-              {expectedDelivery && (
-                <p className="text-sm text-gray-700 flex items-center mt-1">
-                  <CalendarIcon className="h-4 w-4 mr-1 text-gray-500" />
-                  Expected Delivery: <strong className="ml-1">{expectedDelivery}</strong>
-                </p>
-              )}
-            </div>
+            )}
+          </div>
 
-            <div>
-              <h3 className="text-md font-semibold text-green-700 flex items-center mb-3">
-                <ShoppingBagIcon className="h-5 w-5 mr-2" />
-                Items in Your Order
-              </h3>
-              <ul className="divide-y divide-gray-200">
-                {orderItems.map((item, index) => (
-                  <li key={index} className="py-2 flex justify-between text-sm text-gray-700">
-                    <span>{item.product.name} × {item.quantity}</span>
-                    <span className="font-medium">₹{(item.product.price * item.quantity).toFixed(2)}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between font-semibold text-gray-800">
-                <span>Total</span>
-                <span>₹{orderAmount}</span>
-              </div>
+          <div>
+            <h3 className="text-md font-semibold text-green-700 flex items-center mb-3">
+              <ShoppingBagIcon className="h-5 w-5 mr-2" />
+              Items in Your Order
+            </h3>
+            <ul className="divide-y divide-gray-200">
+              {orderItems.map((item, index) => (
+                <li key={index} className="py-2 flex justify-between text-sm text-gray-700">
+                  <span>{item.product.name} × {item.quantity}</span>
+                  <span className="font-medium">₹{(item.product.price * item.quantity).toFixed(2)}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between font-semibold text-gray-800">
+              <span>Total</span>
+              <span>₹{orderAmount}</span>
             </div>
           </div>
-        )}
+        </div>
 
         <button
           onClick={() => navigate("/")}
