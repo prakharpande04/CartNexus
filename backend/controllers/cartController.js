@@ -6,15 +6,18 @@ const addToCart = async (req, res) => {
   const { userId } = req.body;
   const { productId, name, price } = req.body.product;
   const quantity = 1; // Default to 1 if not provided
+  console.log("At backednd to cart : ",productId);
 
   try {
     let cart = await Cart.findOne({ userId });
+    console.log("to find : ",cart);
 
     if (!cart) {
       cart = new Cart({ userId, items: [] });
     }
  
     const existingItem = cart.items.find(item => item.productId.toString() === productId);
+    console.log("existing item : ", existingItem);
 
     if (existingItem) {
       existingItem.quantity += quantity;
@@ -28,6 +31,7 @@ const addToCart = async (req, res) => {
     cart.totalPrice = cart.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
     await cart.save();
+    console.log("CP1");
     res.status(200).json(cart);
   } catch (error) {
     console.error('Error adding to cart:', error);
@@ -40,7 +44,7 @@ const getCart = async (req, res) => {
   console.log('Fetching cart for user:', userId);
 
   try {
-    const cart = await Cart.findOne({ userId }).populate('items.productId');
+    const cart = await Cart.findOne({ userId });
     console.log('Cart fetched:', cart);
 
     if (!cart) {
