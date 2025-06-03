@@ -1,7 +1,7 @@
-import './App.css'
-import { Routes, Route, Navigate} from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
-import Navbar from './components/Navbar'
+import './App.css';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
+import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
 import Cart from './pages/Cart';
@@ -23,6 +23,8 @@ const PublicRoute = ({ element }) => {
 };
 
 function App() {
+  const { isAuthenticated } = useAuth0(); // ✅ Move it here
+
   return (
     <>
       <div className="nav-container">
@@ -39,9 +41,18 @@ function App() {
           <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
           <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
           <Route path="/search" element={<ProtectedRoute element={<SearchResults />} />} />
-          
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
 
+          {/* ✅ Catch-all route with proper isAuthenticated check */}
+          <Route
+            path="*"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
         </Routes>
       </div>
     </>
