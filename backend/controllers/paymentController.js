@@ -18,7 +18,8 @@ const generateOrderId = () => {
 const getSessionId = async(req, res) => {
     const orderId = generateOrderId();
     const customer_id = req.params.userId.replace('|', '_');
-    const amount = req.params.total;
+    const rawamount = req.params.total;
+    const amount = parseFloat(rawamount).toFixed(2);
 	const request = {
 		order_amount: amount,
 		order_currency: "INR",
