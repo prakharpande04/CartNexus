@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 // import './styles/Orders.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { getCookie } from '../utils/cookie';
+import axios from 'axios';
 
 function Orders() {
   const [orders, setOrders] = useState([]);

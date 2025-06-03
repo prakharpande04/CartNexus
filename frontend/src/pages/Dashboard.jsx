@@ -64,6 +64,7 @@ function Dashboard() {
 
   const handleAddToCart = async(product) => {
     setCartCount(cartCount + 1);
+    console.log("product : ",product);
 
     try{
       const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/cart/`, {

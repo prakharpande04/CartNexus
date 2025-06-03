@@ -23,7 +23,6 @@ function Checkout() {
       console.log('Cashfree session ID:', res.data.order_id);
 
       setOrderId(order_id);
-      console.log('Order ID set in state:', orderId);
 
       return { orderId: order_id, sessionId: payment_session_id };
     } catch (error) {
@@ -31,6 +30,10 @@ function Checkout() {
       throw error;
     }
   };
+  useEffect(() => {
+    console.log('Order ID set in state:', orderId);
+  },
+  [orderId]);
 
   const subtotal = cartItems.reduce(
     (total, item) => total + (item.price ?? 0) * (item.quantity ?? 0),
@@ -60,6 +63,7 @@ function Checkout() {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cart/${userId}`);
         const cart = res.data;
+        console.log("cart items in checkout", res.data);
 
         if (!cart || !cart.items) {
           setCartItems([]);
@@ -67,11 +71,14 @@ function Checkout() {
         }
 
         const allItems = cart.items.map((item) => {
+          console.log("item : ",item)
           const product = item.productId || {};
+          console.log("product : ",product);
+
           return {
-            id: product._id ?? item._id,  // Ensure this gets the actual product _id
-            name: product.name ?? item.name,
-            price: product.price ?? item.price ?? 0,
+            id: product,  // Ensure this gets the actual product _id
+            name: item.name,
+            price: item.price,
             quantity: item.quantity ?? 1,
             image: product.image || '',
           };
@@ -86,7 +93,12 @@ function Checkout() {
     };
 
     fetchCartItems();
-  }, [userId]);
+  },
+  []);
+
+  useEffect(() => {
+    console.log("All items (after update):", cartItems);
+  }, [cartItems]);
 
   const verifyPayment = async(orderId) => {
     console.log('Verifying payment for order ID:', orderId);
@@ -100,12 +112,12 @@ function Checkout() {
         orderId,
         userId, // string user ID
         products: cartItems.map(item => ({
-          product: item.id,
+          product: item.id, // ✅ include product ID
           name: item.name,
           quantity: item.quantity,
         })),
         totalAmount: total,
-        paymentStatus: "Successful", // after successful payment
+        paymentStatus: "Successful",
       };
 
     // Send order data to backend

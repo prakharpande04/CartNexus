@@ -132,7 +132,6 @@ function Cart() {
             <div className="lg:col-span-2 space-y-6">
               {cartItems.map((item) => (
                 <div
-                  key={item.id}
                   className="flex flex-col sm:flex-row items-center justify-between gap-6 border p-4 rounded-xl shadow-sm bg-white"
                 >
                   <div className="flex items-center gap-5">
