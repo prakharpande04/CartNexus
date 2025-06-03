@@ -39,6 +39,9 @@ function App() {
           <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
           <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
           <Route path="/search" element={<ProtectedRoute element={<SearchResults />} />} />
+          
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
         </Routes>
       </div>
     </>
