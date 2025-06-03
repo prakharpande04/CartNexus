@@ -53,6 +53,7 @@ const PaymentSuccess = () => {
 
   useEffect(() => {
     console.log("Order Items : ", orderItems);
+    console.log("Amount : ", orderAmount);
   },
   [orderItems]);
 
@@ -92,8 +93,7 @@ const PaymentSuccess = () => {
             <ul className="divide-y divide-gray-200">
               {orderItems.map((item, index) => (
                 <li key={index} className="py-2 flex justify-between text-sm text-gray-700">
-                  <span>{item.product.name} × {item.quantity}</span>
-                  <span className="font-medium">₹{(item.product.price * item.quantity).toFixed(2)}</span>
+                  <span>{item.name} × {item.quantity}</span>
                 </li>
               ))}
             </ul>
