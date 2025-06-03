@@ -237,7 +237,7 @@ function Checkout() {
                 </div>
                 <div className="border-t pt-4 mt-4 flex justify-between text-xl font-semibold text-gray-900">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>₹{total.toFixed(2)}</span>
                 </div>
               </div>
 
