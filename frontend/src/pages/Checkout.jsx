@@ -208,7 +208,7 @@ function Checkout() {
                     )}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-                      <p className="text-sm text-gray-500">${item.price.toFixed(2)}</p>
+                      <p className="text-sm text-gray-500">₹{item.price.toFixed(2)}</p>
                     </div>
                   </div>
                   <div className="text-lg text-gray-700">Qty: {item.quantity}</div>
@@ -225,15 +225,15 @@ function Checkout() {
               <div className="space-y-4 text-gray-600 text-base">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span>${shipping.toFixed(2)}</span>
+                  <span>₹{shipping.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Tax (18%)</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>₹{tax.toFixed(2)}</span>
                 </div>
                 <div className="border-t pt-4 mt-4 flex justify-between text-xl font-semibold text-gray-900">
                   <span>Total</span>
