@@ -18,8 +18,9 @@ const generateOrderId = () => {
 const getSessionId = async(req, res) => {
     const orderId = generateOrderId();
     const customer_id = req.params.userId.replace('|', '_');
+    const amount = req.params.total;
 	const request = {
-		order_amount: "1",
+		order_amount: amount,
 		order_currency: "INR",
 		customer_details: {
 			customer_id: customer_id,
