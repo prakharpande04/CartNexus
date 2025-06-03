@@ -122,10 +122,10 @@ function Checkout() {
 
     // Send order data to backend
       console.log('Sending create order data to backend:', orderData);
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order/create`, orderData);
-      setLoading(false);
-      console.log('Order created successfully:', orderData);
+      const sentOrder = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order/create`, orderData);
+      console.log('Order created successfully:', sentOrder);
       console.log('Navigating to payment success page with order ID:', orderId);
+      setLoading(false);
       navigate(`/payment-success?orderId=${orderId}`);
     } catch (error) {
       console.error('Error verifying payment:', error); 

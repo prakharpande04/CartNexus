@@ -51,6 +51,11 @@ const PaymentSuccess = () => {
     }
   }, []);
 
+  useEffect(() => {
+    console.log("Order Items : ", orderItems);
+  },
+  [orderItems]);
+
   return (
     loading ? <Loader /> :
     <div className="min-h-screen min-w-screen bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center px-4 py-12">
