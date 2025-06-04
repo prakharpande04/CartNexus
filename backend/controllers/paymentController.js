@@ -32,7 +32,7 @@ const getSessionId = async(req, res) => {
 		},
 		order_meta: {
 			return_url:
-				"https://shopnexus04.vercel.app/payment-success?order_id={order_id}",
+				"https://shopnexus04.vercel.app/payment-status?order_id={order_id}",
             notify_url:
                 "https://cartnexus-backend.onrender.com/api/paymentStatus"
 		},
