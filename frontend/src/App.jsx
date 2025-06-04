@@ -30,8 +30,8 @@ function App() {
           <Route path="/orders" element={isAuthenticated ? <Orders /> : <Navigate to="/" replace />} />
           <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/" replace />} />
           <Route path="/checkout" element={isAuthenticated ? <Checkout /> : <Navigate to="/" replace />} />
-          <Route path="/payment-success" element={isAuthenticated ? <PaymentSuccess /> : <Navigate to="/" replace />} />
-          <Route path="/payment-failure" element={isAuthenticated ? <PaymentFailure /> : <Navigate to="/" replace />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failure" element={<PaymentFailure />} />
           <Route path="/search" element={isAuthenticated ? <SearchResults /> : <Navigate to="/" replace />} />
           <Route path="*" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/" replace />} />
         </Routes>
