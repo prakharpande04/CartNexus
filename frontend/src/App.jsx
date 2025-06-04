@@ -40,7 +40,7 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
           <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
           <Route path="/check" element={<PaymentStatus />} />
-          <Route path="/payment-status" element={<PaymentStatus />} />
+          <Route path="/payment-status" element={<ProtectedRoute element={<PaymentStatus />} />} />
           <Route path="/search" element={<ProtectedRoute element={<SearchResults />} />} />
 
           {/* ✅ Catch-all route with proper isAuthenticated check */}
