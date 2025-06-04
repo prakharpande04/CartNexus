@@ -31,7 +31,7 @@ const getSessionId = async(req, res) => {
 		},
 		order_meta: {
 			return_url:
-				"https://shopnexus04.vercel.app/payment-success?order_id={orderId}",
+				"https://shopnexus04.vercel.app/payment-success?order_id={order_id}",
 		},
 		order_note: "",
 	};
