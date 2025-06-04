@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const { Cashfree, CFEnvironment } = require("cashfree-pg");
+const Payment = require('./../models/Payment');
 
 
 const cashfree = new Cashfree(
@@ -108,7 +109,7 @@ const getPaymentStatus = async(req, res) => {
         console.log("Fetching status for orderId:", orderId);
     
         // Populate product details in the order
-        const paymentStatus = await Payment.find({ orderId });
+        const paymentStatus = await Payment.findOne({ orderId });
         // .populate("products.product");
         console.log("Payment status : ", paymentStatus);
     
