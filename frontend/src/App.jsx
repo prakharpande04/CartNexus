@@ -22,16 +22,16 @@ function App() {
       </div>
       <div className="app-container">
         <Routes>
-          <Route path="/" element={!isAuthenticated ? <Landing /> : <Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />} />
-          <Route path="/create-account" element={isAuthenticated ? <Register /> : <Navigate to="/" replace />} />
-          <Route path="/cart" element={isAuthenticated ? <Cart /> : <Navigate to="/" replace />} />
-          <Route path="/orders" element={isAuthenticated ? <Orders /> : <Navigate to="/" replace />} />
-          <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/" replace />} />
-          <Route path="/checkout" element={isAuthenticated ? <Checkout /> : <Navigate to="/" replace />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/create-account" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment-status" element={<PaymentStatus />} />
-          <Route path="/search" element={isAuthenticated ? <SearchResults /> : <Navigate to="/" replace />} />
-          <Route path="*" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/" replace />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </div>
     </>
