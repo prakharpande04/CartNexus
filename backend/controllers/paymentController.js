@@ -103,20 +103,39 @@ const setPaymentStatus = async (req, res) => {
 }
 exports.setPaymentStatus = setPaymentStatus;
 
-const getPaymentStatus = async(req, res) => {
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const getPaymentStatus = async (req, res) => {
+  const orderId = req.params.orderId;
+  console.log("Fetching status for orderId:", orderId);
+
+  const maxRetries = 5;
+  const retryDelay = 1000; // 1 second
+  let attempt = 0;
+  let paymentStatus = null;
+
+  while (attempt < maxRetries) {
     try {
-        const orderId = req.params.orderId;
-        console.log("Fetching status for orderId:", orderId);
-    
-        // Populate product details in the order
-        const paymentStatus = await Payment.findOne({ orderId });
-        // .populate("products.product");
-        console.log("Payment status : ", paymentStatus);
-    
-        res.status(200).json({ paymentStatus });
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-        res.status(500).json({ success: false, message: "Server error", error: error.message });
+      paymentStatus = await Payment.findOne({ orderId });
+
+      if (paymentStatus) {
+        console.log("Payment status found:", paymentStatus);
+        return res.status(200).json({ paymentStatus });
       }
-}
+
+      console.log(`Attempt ${attempt + 1}: Payment status not found. Retrying...`);
+      attempt++;
+      await delay(retryDelay);
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error.message);
+      attempt++;
+      await delay(retryDelay);
+    }
+  }
+
+  console.error("Payment status not found after retries.");
+  return res.status(404).json({ success: false, message: "Payment status not found." });
+};
+
 exports.getPaymentStatus = getPaymentStatus;
