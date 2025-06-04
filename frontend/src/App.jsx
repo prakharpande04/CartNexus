@@ -12,6 +12,16 @@ import Checkout from './pages/Checkout';
 import PaymentStatus from './pages/PaymentStatus';
 import SearchResults from './pages/SearchResults';
 
+const ProtectedRoute = ({ element }) => {
+  const { isAuthenticated } = useAuth0();
+  return isAuthenticated ? element : <Navigate to="/" />;
+};
+
+const PublicRoute = ({ element }) => {
+  const { isAuthenticated } = useAuth0();
+  return !isAuthenticated ? element : <Navigate to="/dashboard" />;
+};
+
 function App() {
   const { isAuthenticated } = useAuth0(); // ✅ Move it here
 
@@ -22,16 +32,27 @@ function App() {
       </div>
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create-account" element={<Register />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/payment-status" element={<PaymentStatus />} />
-          <Route path="/search" element={<SearchResults />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<PublicRoute element={<Landing />} />} />
+          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+          <Route path="/create-account" element={<ProtectedRoute element={<Register />} />} />
+          <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />
+          <Route path="/orders" element={<ProtectedRoute element={<Orders />} />} />
+          <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+          <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
+          <Route path="/payment-status" element={<ProtectedRoute element={<PaymentStatus />} />} />
+          <Route path="/search" element={<ProtectedRoute element={<SearchResults />} />} />
+
+          {/* ✅ Catch-all route with proper isAuthenticated check */}
+          <Route
+            path="*"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
         </Routes>
       </div>
     </>
