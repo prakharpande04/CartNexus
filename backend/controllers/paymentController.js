@@ -32,6 +32,8 @@ const getSessionId = async(req, res) => {
 		order_meta: {
 			return_url:
 				"https://shopnexus04.vercel.app/payment-success?order_id={order_id}",
+            notify_url:
+                "https://cartnexus-backend.onrender.com/api/paymentStatus"
 		},
 		order_note: "",
 	};
@@ -49,7 +51,6 @@ const getSessionId = async(req, res) => {
 			console.error("Error setting up order request:", error.response.data);
 		});
 }
-
 exports.getSessionId = getSessionId;
 
 const verifyPayment = (req, res) => {
@@ -76,3 +77,36 @@ const verifyPayment = (req, res) => {
         });
 }
 exports.verifyPayment = verifyPayment;
+
+const setPaymentStatus = async (req, res) => {
+    const { order_id, reference_id, tx_status, payment_mode } = req.body;
+    console.log("Payment Status Status : ", req.body);
+
+    const newStatus = new Payment({
+        orderId : order_id,
+        referenceId : reference_id,
+        transactionStatus : tx_status,
+        paymentMode : payment_mode
+    });
+
+    await newStatus.save();
+}
+exports.setPaymentStatus = setPaymentStatus;
+
+const getPaymentStatus = async(req, res) => {
+    try {
+        const orderId = req.params.orderId;
+        console.log("Fetching status for orderId:", orderId);
+    
+        // Populate product details in the order
+        const paymentStatus = await Payment.find({ orderId });
+        // .populate("products.product");
+        console.log("Payment status : ", paymentStatus);
+    
+        res.status(200).json({ paymentStatus });
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
+      }
+}
+exports.getPaymentStatus = getPaymentStatus;

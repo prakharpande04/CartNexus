@@ -1,10 +1,27 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
-  cardName: { type: String, required: true },
-  cardNumber: { type: String, required: true },
-  expiry: { type: String, required: true }, // e.g., '09/30'
-  cvv: { type: String, required: true }
-}, { _id: false }); // _id disabled for embedded use
+  orderId: {
+    type: String,
+    required: true,
+    unique: true
+  }, 
 
-module.exports = paymentSchema;
+  referenceId: {
+    type: String,
+    required: true, 
+    unique: true
+  },
+
+  transactionStatus: {
+    type: String,
+    required: true
+  },
+
+  paymentMode: {
+    type: String,
+    required: true
+  }
+});
+
+module.exports = mongoose.model('Payment', paymentSchema);
