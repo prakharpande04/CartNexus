@@ -79,17 +79,25 @@ const verifyPayment = (req, res) => {
 exports.verifyPayment = verifyPayment;
 
 const setPaymentStatus = async (req, res) => {
-    const { order_id, reference_id, tx_status, payment_mode } = req.body;
-    console.log("Payment Status Status : ", req.body);
+    try{
+        const { order_id, reference_id, tx_status, payment_mode } = req.body;
+        console.log("Payment Status Status : ", req.body);
 
-    const newStatus = new Payment({
-        orderId : order_id,
-        referenceId : reference_id,
-        transactionStatus : tx_status,
-        paymentMode : payment_mode
-    });
+        const newStatus = new Payment({
+            orderId : order_id,
+            referenceId : reference_id,
+            transactionStatus : tx_status,
+            paymentMode : payment_mode
+        });
 
-    await newStatus.save();
+        await newStatus.save();
+
+        return res.status(200).json({ message: "Payment status recorded successfully." });
+        
+    } catch (error) {
+        console.error("Error saving payment status:", error);
+        return res.status(500).json({ message: "Failed to record payment status." });
+    }
 }
 exports.setPaymentStatus = setPaymentStatus;
 
