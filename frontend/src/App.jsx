@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Checkout from './pages/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
 import SearchResults from './pages/SearchResults';
+import PaymentFailure from './pages/PaymentFailure';
 
 const ProtectedRoute = ({ element }) => {
   const { isAuthenticated } = useAuth0();
@@ -40,6 +41,7 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
           <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
           <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
+          <Route path="/payment-failure" element={<ProtectedRoute element={<PaymentFailure />} />} />
           <Route path="/search" element={<ProtectedRoute element={<SearchResults />} />} />
 
           {/* ✅ Catch-all route with proper isAuthenticated check */}

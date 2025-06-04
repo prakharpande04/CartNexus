@@ -138,7 +138,7 @@ function Checkout() {
       const checkoutOptions = {
         orderId: orderId,
         paymentSessionId: sessionId,
-        redirectTarget: "_modal", // or '_blank' for new tab
+        redirectTarget: "_self", // or '_blank' for new tab
       }
 
       console.log("payment for orderId:", orderId)
