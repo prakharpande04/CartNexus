@@ -9,9 +9,8 @@ import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
 import Checkout from './pages/Checkout';
-import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentStatus from './pages/PaymentStatus';
 import SearchResults from './pages/SearchResults';
-import PaymentFailure from './pages/PaymentFailure';
 
 function App() {
   const { isAuthenticated } = useAuth0(); // ✅ Move it here
@@ -30,8 +29,7 @@ function App() {
           <Route path="/orders" element={isAuthenticated ? <Orders /> : <Navigate to="/" replace />} />
           <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/" replace />} />
           <Route path="/checkout" element={isAuthenticated ? <Checkout /> : <Navigate to="/" replace />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/payment-failure" element={<PaymentFailure />} />
+          <Route path="/payment-status" element={<PaymentStatus />} />
           <Route path="/search" element={isAuthenticated ? <SearchResults /> : <Navigate to="/" replace />} />
           <Route path="*" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/" replace />} />
         </Routes>
