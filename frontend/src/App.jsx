@@ -13,16 +13,6 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import SearchResults from './pages/SearchResults';
 import PaymentFailure from './pages/PaymentFailure';
 
-const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth0();
-  return isAuthenticated ? element : <Navigate to="/" />;
-};
-
-const PublicRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth0();
-  return !isAuthenticated ? element : <Navigate to="/dashboard" />;
-};
-
 function App() {
   const { isAuthenticated } = useAuth0(); // ✅ Move it here
 
@@ -33,28 +23,17 @@ function App() {
       </div>
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<PublicRoute element={<Landing />} />} />
-          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-          <Route path="/create-account" element={<ProtectedRoute element={<Register />} />} />
-          <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />
-          <Route path="/orders" element={<ProtectedRoute element={<Orders />} />} />
-          <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
-          <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
-          <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
-          <Route path="/payment-failure" element={<ProtectedRoute element={<PaymentFailure />} />} />
-          <Route path="/search" element={<ProtectedRoute element={<SearchResults />} />} />
-
-          {/* ✅ Catch-all route with proper isAuthenticated check */}
-          <Route
-            path="*"
-            element={
-              isAuthenticated ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <Navigate to="/" replace />
-              )
-            }
-          />
+          <Route path="/" element={!isAuthenticated ? <Landing /> : <Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />} />
+          <Route path="/create-account" element={isAuthenticated ? <Register /> : <Navigate to="/" replace />} />
+          <Route path="/cart" element={isAuthenticated ? <Cart /> : <Navigate to="/" replace />} />
+          <Route path="/orders" element={isAuthenticated ? <Orders /> : <Navigate to="/" replace />} />
+          <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/" replace />} />
+          <Route path="/checkout" element={isAuthenticated ? <Checkout /> : <Navigate to="/" replace />} />
+          <Route path="/payment-success" element={isAuthenticated ? <PaymentSuccess /> : <Navigate to="/" replace />} />
+          <Route path="/payment-failure" element={isAuthenticated ? <PaymentFailure /> : <Navigate to="/" replace />} />
+          <Route path="/search" element={isAuthenticated ? <SearchResults /> : <Navigate to="/" replace />} />
+          <Route path="*" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/" replace />} />
         </Routes>
       </div>
     </>
