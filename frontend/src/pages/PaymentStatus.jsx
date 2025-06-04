@@ -22,7 +22,7 @@ const PaymentStatus = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const orderId = searchParams.get("orderId")
+      const orderId = searchParams.get("order_id")
       setOrderId(orderId || "Unavailable")
 
       try {
