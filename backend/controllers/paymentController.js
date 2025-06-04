@@ -80,14 +80,15 @@ exports.verifyPayment = verifyPayment;
 
 const setPaymentStatus = async (req, res) => {
     try{
-        const { order_id, reference_id, tx_status, payment_mode } = req.body;
+        const { order_id } = req.body.data.order;
+        const { bank_reference, payment_status, payment_group } = req.body.data.payment;
         console.log("Payment Status Status : ", req.body);
 
         const newStatus = new Payment({
             orderId : order_id,
-            referenceId : reference_id,
-            transactionStatus : tx_status,
-            paymentMode : payment_mode
+            referenceId : bank_reference,
+            transactionStatus : payment_status,
+            paymentMode : payment_group
         });
 
         await newStatus.save();
