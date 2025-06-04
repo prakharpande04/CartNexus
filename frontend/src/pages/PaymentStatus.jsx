@@ -21,6 +21,13 @@ const PaymentStatus = () => {
   const [paymentMode, setPaymentMode] = useState("")
 
   useEffect(() => {
+  const timer = setTimeout(() => {
+    console.log("3 seconds passed");
+  }, 3000);
+    return () => clearTimeout(timer); // Cleanup on unmount
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       const orderId = searchParams.get("order_id")
       setOrderId(orderId || "Unavailable")
