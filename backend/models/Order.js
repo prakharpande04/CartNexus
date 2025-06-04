@@ -33,8 +33,9 @@ const orderSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    required: true,
+    required: true
   },
+  
   expectedDelivery: {
     type: Date,
     default: () => {
