@@ -103,26 +103,7 @@ function Checkout() {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cashfree/verify/${orderId}`)
       console.log("Payment verification response:", res.data.message)
-
-      const orderData = {
-        orderId,
-        userId, // string user ID
-        products: cartItems.map((item) => ({
-          product: item.id, // ✅ include product ID
-          name: item.name,
-          quantity: item.quantity,
-        })),
-        totalAmount: total,
-        paymentStatus: "Successful",
-      }
-
-      // Send order data to backend
-      console.log("Sending create order data to backend:", orderData)
-      const sentOrder = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order/create`, orderData)
-      console.log("Order created successfully:", sentOrder)
-      console.log("Navigating to payment success page with order ID:", orderId)
       setLoading(false)
-      navigate(`/payment-success?orderId=${orderId}`)
     } catch (error) {
       console.error("Error verifying payment:", error)
     }
@@ -140,6 +121,22 @@ function Checkout() {
         paymentSessionId: sessionId,
         redirectTarget: "_self", // or '_blank' for new tab
       }
+
+      const orderData = {
+        orderId,
+        userId, // string user ID
+        products: cartItems.map((item) => ({
+          product: item.id, // ✅ include product ID
+          name: item.name,
+          quantity: item.quantity,
+        })),
+        totalAmount: total
+      }
+
+      // Send order data to backend
+      console.log("Sending create order data to backend:", orderData)
+      const sentOrder = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/order/create`, orderData)
+      console.log("Order created successfully:", sentOrder)
 
       console.log("payment for orderId:", orderId)
       if (cashfree.current) {
