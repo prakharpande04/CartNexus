@@ -2,6 +2,8 @@ import { useState } from "react"
 import { useAuth0 } from "@auth0/auth0-react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const steps = ["Personal Info", "Address Info"]
 
@@ -63,7 +65,7 @@ const Register = () => {
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/register`, data)
         console.log("Registration successful:", response.data)
-        alert("Form submitted successfully!")
+        toast.success("Registration Successful !");
         setLoading(false)
         navigate("/dashboard")
       } catch (error) {
@@ -86,6 +88,19 @@ const Register = () => {
 
   return (
     <div className="min-h-screen min-w-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark" // Or "light" or "colored"
+      />
+      
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>

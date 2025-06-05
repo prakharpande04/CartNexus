@@ -3,6 +3,8 @@ import { useCart } from "../context/CartContext"
 import { useNavigate } from "react-router-dom"
 import { useAuth0 } from "@auth0/auth0-react"
 import axios from "axios"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Dashboard() {
   const { setCartCount, cartCount } = useCart()
@@ -78,11 +80,13 @@ function Dashboard() {
         product: product,
       })
       console.log("Product added to cart:", response.data)
+      toast.success("Product added to cart successfully!");
     } catch (error) {
       console.error("Error adding product to cart:", error)
     } finally {
       setAddingToCart(null)
-      alert("Product added to cart successfully!")
+      // toast("Product added to cart !!");
+      // alert("Product added to cart successfully!")
     }
   }
 
@@ -107,6 +111,19 @@ function Dashboard() {
 
   return (
     <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden min-w-screen">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark" // Or "light" or "colored"
+      />
+      
       {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>

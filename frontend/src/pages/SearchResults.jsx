@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom"
 import axios from "axios"
 import { useCart } from "../context/CartContext"
 import { getCookie } from "../utils/cookie"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SearchResults = () => {
   const userId = getCookie("userId")
@@ -25,11 +27,11 @@ const SearchResults = () => {
         product: product,
       })
       console.log("Product added to cart:", response.data)
+      toast.success("Product added to cart successfully!");
     } catch (error) {
       console.error("Error adding product to cart:", error)
     } finally {
       setAddingToCart(null)
-      alert("Product added to cart successfully!")
     }
   }
 
@@ -79,6 +81,19 @@ const SearchResults = () => {
 
   return (
     <div className="min-h-screen min-w-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark" // Or "light" or "colored"
+      />
+
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
