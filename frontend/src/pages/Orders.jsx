@@ -17,6 +17,7 @@ function Orders() {
       }
       setOrders(response.data.orders)
       orders.paymentStatus = orders.paymentStatus.toLowerCase();
+      orders.expectedDelivery = orders.expectedDelivery.split('T')[0];
     }
     fetchOrders()
   }, [userId])
