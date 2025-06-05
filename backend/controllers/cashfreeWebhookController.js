@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const OrderPayment = require('../models/OrderPayment');
 const Cart = require('../models/Cart');
+const Payment = require('../models/Payment');
 const CASHFREE_WEBHOOK = process.env.CASHFREE_WEBHOOK;
 
 exports.handleCashfreeWebhook = async (req, res) => {
@@ -30,6 +31,15 @@ exports.handleCashfreeWebhook = async (req, res) => {
     const data = parsedBody.data;
     console.log('Parsed event:', event);
     console.log('Parsed data:', data);
+
+    const newStatus = new Payment({
+        orderId : data.order?.order_id,
+        referenceId : data.payment?.bank_reference,
+        transactionStatus : data.payment?.payment_status,
+        paymentMode : data.payment?.payment_group
+    });
+
+    await newStatus.save();
 
     if (event === 'PAYMENT_SUCCESS_WEBHOOK') {
       const rawUserId = data.customer_details?.customer_id || 'guest';

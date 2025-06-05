@@ -32,9 +32,7 @@ const getSessionId = async(req, res) => {
 		},
 		order_meta: {
 			return_url:
-				"https://shopnexus04.vercel.app/payment-status?order_id={order_id}",
-            notify_url:
-                "https://cartnexus-backend.onrender.com/api/paymentStatus"
+				"https://shopnexus04.vercel.app/payment-status?order_id={order_id}"
 		},
 		order_note: "",
 	};
@@ -79,63 +77,22 @@ const verifyPayment = (req, res) => {
 }
 exports.verifyPayment = verifyPayment;
 
-const setPaymentStatus = async (req, res) => {
-    try{
-        const { order_id } = req.body.data.order;
-        const { bank_reference, payment_status, payment_group } = req.body.data.payment;
-        console.log("Payment Status Status : ", req.body);
-
-        const newStatus = new Payment({
-            orderId : order_id,
-            referenceId : bank_reference,
-            transactionStatus : payment_status,
-            paymentMode : payment_group
-        });
-
-        await newStatus.save();
-
-        return res.status(200).json({ message: "Payment status recorded successfully." });
-        
-    } catch (error) {
-        console.error("Error saving payment status:", error);
-        return res.status(500).json({ message: "Failed to record payment status." });
-    }
-}
-exports.setPaymentStatus = setPaymentStatus;
-
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const getPaymentStatus = async (req, res) => {
   const orderId = req.params.orderId;
   console.log("Fetching status for orderId:", orderId);
 
-  const maxRetries = 5;
-  const retryDelay = 1000; // 1 second
-  let attempt = 0;
-  let paymentStatus = null;
-
-  while (attempt < maxRetries) {
     try {
-      paymentStatus = await Payment.findOne({ orderId });
+        const paymentStatus = await Payment.findOne({ orderId });
 
-      if (paymentStatus) {
-        console.log("Payment status found:", paymentStatus);
-        return res.status(200).json({ paymentStatus });
-      }
+        if (paymentStatus) {
+            console.log("Payment status found:", paymentStatus);
+            return res.status(200).json({ paymentStatus });
+        }
 
-      console.log(`Attempt ${attempt + 1}: Payment status not found. Retrying...`);
-      attempt++;
-      await delay(retryDelay);
     } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error.message);
-      attempt++;
-      await delay(retryDelay);
+        console.error("Error : ", error.message);
+        return res.status(500).json({ message: "Error", error: error.message });
     }
-  }
-
-  console.error("Payment status not found after retries.");
-  return res.status(404).json({ success: false, message: "Payment status not found." });
 };
-
 exports.getPaymentStatus = getPaymentStatus;
