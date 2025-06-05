@@ -16,6 +16,7 @@ function Orders() {
         return
       }
       setOrders(response.data.orders)
+      orders.paymentStatus = orders.paymentStatus.toLowerCase();
     }
     fetchOrders()
   }, [userId])
