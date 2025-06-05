@@ -140,18 +140,18 @@ function Checkout() {
 
       console.log("payment for orderId:", orderId)
       if (cashfree.current) {
-        cashfree.current
-          .checkout(checkoutOptions)
-          .then((response) => {
-            console.log("Cashfree checkout response:", response)
-            // Use the orderId from the state at the time of session creation
-            verifyPayment(orderId)
-          })
-          .catch((error) => {
-            console.error("Cashfree checkout error:", error)
-            setProcessing(false)
-            setPaymentStep("review")
-          })
+        try {
+          const response = await cashfree.current.checkout(checkoutOptions);
+          console.log("Cashfree checkout response:", response);
+
+          // Use the orderId from the state at the time of session creation
+          await verifyPayment(orderId); // if verifyPayment is also async
+        } catch (error) {
+          console.error("Cashfree checkout error:", error);
+          setProcessing(false);
+          setPaymentStep("review");
+        }
+        
       } else {
         console.error("Cashfree SDK has not been initialized.")
         setProcessing(false)
