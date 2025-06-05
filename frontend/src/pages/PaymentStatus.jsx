@@ -36,9 +36,9 @@ const PaymentStatus = () => {
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/getPaymentStatus/${orderId}`)
         console.log("Order status in frontend:", response.data)
 
-        setReferenceId(response.data.referenceId)
-        setTransactionStatus(response.data.transactionStatus)
-        setPaymentMode(response.data.paymentMode)
+        setReferenceId(response.data.paymentStatus.referenceId)
+        setTransactionStatus(response.data.paymentStatus.transactionStatus)
+        setPaymentMode(response.data.paymentStatus.paymentMode)
       } catch (err) {
         console.error("Error fetching payment status:", err)
       }
@@ -226,14 +226,14 @@ const PaymentStatus = () => {
                 {expectedDelivery && (
                   <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
                     <span className="text-gray-300 flex items-center gap-2">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {/* <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
                           d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-6 0h6m-6 0V7a1 1 0 00-1 1v9a1 1 0 001 1h6a1 1 0 001-1V8a1 1 0 00-1-1"
                         />
-                      </svg>
+                      </svg> */}
                       Expected Delivery
                     </span>
                     <span className="text-white font-medium">{expectedDelivery}</span>
