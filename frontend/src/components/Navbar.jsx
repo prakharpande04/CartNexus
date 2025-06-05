@@ -561,10 +561,15 @@ function Navbar() {
                     </div>
 
                     <ul className="absolute left-1/2 -translate-x-1/2 top-full mt-1 hidden w-40 flex-col items-start bg-white text-black shadow-lg rounded-md p-2 group-hover:flex z-50">
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Technology</li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Business</li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Health</li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Science</li>
+                        {['Home & Kitchen', 'Electronics', 'Sports', 'Clothes'].map((category) => (
+                            <li
+                            key={category}
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                            onClick={() => navigate(`/search?query=${encodeURIComponent(category)}`)}
+                            >
+                            {category}
+                            </li>
+                        ))}
                     </ul>
                 </li>
 

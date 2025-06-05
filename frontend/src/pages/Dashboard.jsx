@@ -55,7 +55,7 @@ function Dashboard() {
 
   const categories = [
     { id: 1, name: "Electronics", count: 120, icon: "💻", color: "from-blue-500 to-cyan-500" },
-    { id: 2, name: "Fashion", count: 80, icon: "👗", color: "from-pink-500 to-rose-500" },
+    { id: 2, name: "Clothes", count: 80, icon: "👗", color: "from-pink-500 to-rose-500" },
     { id: 3, name: "Home & Kitchen", count: 100, icon: "🏠", color: "from-green-500 to-emerald-500" },
     { id: 4, name: "Sports", count: 60, icon: "⚽", color: "from-orange-500 to-red-500" },
   ]
@@ -243,6 +243,7 @@ function Dashboard() {
             {categories.map((category, index) => (
               <div
                 key={category.id}
+                onClick={() => navigate(`/search?query=${encodeURIComponent(category.name)}`)}
                 className="group cursor-pointer transform hover:scale-105 transition-all duration-300"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
