@@ -8,7 +8,7 @@ exports.createOrder = async (req, res) => {
       userId,
       products,           // Should be an array of { product: ObjectId, quantity: Number }
       totalAmount,
-      paymentStatus = "Completed",
+      paymentStatus = "completed",
       expectedDelivery,
     } = req.body;
     const id = userId.replace('|', '_');
