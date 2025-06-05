@@ -18,6 +18,8 @@ function Orders() {
       setOrders(response.data.orders)
       orders.paymentStatus = orders.paymentStatus.toLowerCase();
       orders.expectedDelivery = orders.expectedDelivery.split('T')[0];
+      console.log("status : ",orders.paymentStatus);
+      console.log("date : ",orders.expectedDelivery);
     }
     fetchOrders()
   }, [userId])
