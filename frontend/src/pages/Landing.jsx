@@ -1,7 +1,15 @@
 import { useAuth0 } from "@auth0/auth0-react"
+import { useNavigate } from "react-router-dom";
 
 function Landing() {
   const { loginWithRedirect } = useAuth0()
+  const navigate = useNavigate();
+  
+  const links = [
+    { name: "Privacy Policy", path: "/privacy-policy" },
+    { name: "Terms of Service", path: "/terms-and-conditions" },
+    { name: "Support", path: "/support" },
+  ];
 
   return (
     <div className="min-h-screen min-w-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
@@ -314,14 +322,14 @@ function Landing() {
           <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between">
             <div className="text-gray-400 text-sm mb-4 sm:mb-0">© 2024 ShopNexus. All rights reserved.</div>
             <div className="flex items-center gap-6">
-              {["Privacy Policy", "Terms of Service", "Support"].map((link) => (
-                <a
-                  key={link}
-                  href="#"
+              {links.map((link) => (
+                <button
+                  key={link.name}
+                  onClick={() => navigate(link.path)}
                   className="text-gray-400 hover:text-white text-sm transition-colors duration-200"
                 >
-                  {link}
-                </a>
+                  {link.name}
+                </button>
               ))}
             </div>
           </div>
