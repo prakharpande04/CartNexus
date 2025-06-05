@@ -16,10 +16,6 @@ function Orders() {
         return
       }
       setOrders(response.data.orders)
-      orders.paymentStatus = orders.paymentStatus.toLowerCase();
-      orders.expectedDelivery = orders.expectedDelivery.split('T')[0];
-      console.log("status : ",orders.paymentStatus);
-      console.log("date : ",orders.expectedDelivery);
     }
     fetchOrders()
   }, [userId])
@@ -270,7 +266,7 @@ function OrderDetails({ order, onClose }) {
           <div className="space-y-4">
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Order Number</p>
-              <p className="text-white font-mono text-sm bg-white/10 px-2 py-1 rounded">{order.orderId}</p>
+              <p className="text-white font-mono text-sm bg-white/10 px-2 py-1 rounded">{order.orderId.slice(0,28)}</p>
             </div>
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Order Date</p>
@@ -293,7 +289,7 @@ function OrderDetails({ order, onClose }) {
                 <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Expected Delivery</p>
                 <p className="text-gray-300 flex items-center gap-2">
                   <i className="fas fa-truck text-green-400"></i>
-                  {order.expectedDelivery}
+                  {order.expectedDelivery.split('T')[0]}
                 </p>
               </div>
             )}
