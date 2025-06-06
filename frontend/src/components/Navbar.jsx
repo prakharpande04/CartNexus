@@ -452,7 +452,7 @@ function Navbar() {
       setMenuOpen(!menuOpen);
     };
 
-    useEffect(async() => {
+    useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 0) {
                 setNavbarShadow(true);
@@ -462,9 +462,6 @@ function Navbar() {
         };
 
         window.addEventListener('scroll', handleScroll);
-
-        // get cart count from backend
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cartCount/${user?.sub}`);
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
