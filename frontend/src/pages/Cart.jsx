@@ -33,7 +33,7 @@ function Cart() {
         const allItems = cart.items.map((item) => {
           const product = item.productId || {}
           return {
-            id: item._id || product._id,
+            id: item.productId,
             name: item.name || product.name || "Unnamed product",
             price: item.price ?? product.price ?? 0,
             quantity: item.quantity ?? 1,
@@ -54,6 +54,11 @@ function Cart() {
 
     fetchCartItems()
   }, [userId, setCartCount])
+
+  useEffect(() => {
+    console.log(cartItems);
+  },
+  [cartItems]);
 
   const handleQuantityChange = async (id, newQuantity) => {
     if (newQuantity < 1) return
