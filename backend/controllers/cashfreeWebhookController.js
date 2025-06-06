@@ -60,11 +60,13 @@ exports.handleCashfreeWebhook = async (req, res) => {
     console.log('💾 Payment saved');
 
     await Cart.findOneAndUpdate(
-      { userId: rawUserId.replace('_', '|') }, // Convert userId from 'user|id' to 'user_id'
-      { $set: { items: [] } },
-      { $set: { totalQuantity: 0 } } // Clear the cart items
-    );
-    console.log('Cart items cleared for user:', rawUserId);
+      { userId: rawUserId.replace('_', '|') },
+      { $set: { items: [], totalQuantity: 0, totalAmount: 0 } }
+    ).then(() => {
+      console.log('Cart items cleared for user:', rawUserId);
+    }).catch((err) => {
+      console.error('Failed to clear cart:', err);
+    });
 
     res.status(200).json({ message: 'Webhook received' });
   } catch (err) {
