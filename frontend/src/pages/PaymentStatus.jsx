@@ -74,16 +74,16 @@ const PaymentStatus = () => {
     console.log("Amount : ", orderAmount)
   }, [orderItems, orderAmount])
 
-  const getStatusColor = (status) => {
-    switch (status?.toLowerCase()) {
-      case "success":
+  const getStatusColor = (transactionStatus) => {
+    switch (transactionStatus?.toLowerCase()) {
+      case "SUCCESS":
       case "successful":
       case "completed":
         return "text-green-300 bg-green-500/20 border-green-500/30"
       case "pending":
       case "processing":
         return "text-yellow-300 bg-yellow-500/20 border-yellow-500/30"
-      case "failed":
+      case "FAILED":
       case "failure":
         return "text-red-300 bg-red-500/20 border-red-500/30"
       default:
@@ -170,7 +170,7 @@ const PaymentStatus = () => {
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl p-8 md:p-12 w-full max-w-5xl">
           {/* Success Header */}
-          <div className="text-center mb-12">
+          {/* <div className="text-center mb-12">
             <div className="relative inline-block mb-6">
               <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-2xl">
                 <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,13 +182,55 @@ const PaymentStatus = () => {
               </div>
             </div>
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-4">
-              Payment Successful!
+              Payment {transactionStatus}!
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               Your order has been placed successfully. Thank you for shopping with us!
             </p>
             <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-emerald-500 mx-auto mt-6 rounded-full"></div>
+          </div> */}
+          <div className="text-center mb-12">
+            <div className="relative inline-block mb-6">
+              <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-2xl 
+                ${transactionStatus === 'SUCCESS' 
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500' 
+                  : 'bg-gradient-to-r from-red-500 to-rose-500'}`}>
+                {transactionStatus === 'SUCCESS' ? (
+                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+              </div>
+              <div className={`absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center animate-bounce 
+                ${transactionStatus === 'SUCCESS' ? 'bg-yellow-400' : 'bg-red-400'}`}>
+                <span className="text-lg">{transactionStatus === 'SUCCESS' ? '🎉' : '❌'}</span>
+              </div>
+            </div>
+
+            <h1 className={`text-4xl sm:text-5xl font-bold bg-clip-text text-transparent mb-4 
+              ${transactionStatus === 'SUCCESS' 
+                ? 'bg-gradient-to-r from-green-400 to-emerald-400' 
+                : 'bg-gradient-to-r from-red-400 to-rose-400'}`}>
+              Payment {transactionStatus}!
+            </h1>
+
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              {transactionStatus === 'SUCCESS'
+                ? 'Your order has been placed successfully. Thank you for shopping with us!'
+                : 'Unfortunately, your payment did not go through. Please try again or contact support.'}
+            </p>
+
+            <div className={`w-24 h-1 mx-auto mt-6 rounded-full 
+              ${transactionStatus === 'SUCCESS' 
+                ? 'bg-gradient-to-r from-green-500 to-emerald-500' 
+                : 'bg-gradient-to-r from-red-500 to-rose-500'}`}>
+            </div>
           </div>
+
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Order Summary */}
