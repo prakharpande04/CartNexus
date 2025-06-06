@@ -14,9 +14,6 @@ import SearchResults from './pages/SearchResults';
 import TermsAndConditions from './pages/TermsAndConditions';
 import axios from 'axios';
 
-const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/`);
-console.log("Warm Up Response : ", res.data);
-
 const ProtectedRoute = ({ element }) => {
   const { isAuthenticated } = useAuth0();
   return isAuthenticated ? element : <Navigate to="/" />;
@@ -29,6 +26,19 @@ const PublicRoute = ({ element }) => {
 
 function App() {
   const { isAuthenticated } = useAuth0(); // ✅ Move it here
+
+  useEffect(() => {
+    const warmUp = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/`);
+        console.log("Warm Up Response:", res.data);
+      } catch (err) {
+        console.error("Warm Up Failed:", err);
+      }
+    };
+
+    warmUp();
+  }, []);
 
   return (
     <>
