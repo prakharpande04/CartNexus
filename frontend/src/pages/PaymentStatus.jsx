@@ -231,9 +231,10 @@ const PaymentStatus = () => {
             </div>
           </div>
 
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-8"> */}
+          <div className="flex flex-col justify-center lg:flex-row flex-wrap gap-8">
             {/* Order Summary */}
+            {transactionStatus === "SUCCESS" && (
             <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/20 p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
@@ -283,6 +284,7 @@ const PaymentStatus = () => {
                 )}
               </div>
             </div>
+            )}
 
             {/* Payment Details */}
             <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/20 p-6">
@@ -347,6 +349,7 @@ const PaymentStatus = () => {
             </div>
 
             {/* Order Items */}
+            {transactionStatus === "SUCCESS" && (
             <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/20 p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
@@ -399,6 +402,7 @@ const PaymentStatus = () => {
                 </div>
               </div>
             </div>
+            )}
           </div>
 
           {/* Action Buttons */}
@@ -444,6 +448,7 @@ const PaymentStatus = () => {
           </div>
 
           {/* Success Message */}
+          {transactionStatus === "SUCCESS" && (
           <div className="mt-8 text-center">
             <div className="inline-flex items-center gap-2 bg-green-500/20 text-green-300 px-4 py-2 rounded-full border border-green-500/30">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -456,6 +461,7 @@ const PaymentStatus = () => {
               Order confirmation sent to your email
             </div>
           </div>
+          )}
         </div>
       </div>
 
