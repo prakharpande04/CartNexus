@@ -60,6 +60,13 @@ function Cart() {
   },
   [cartItems]);
 
+  const handleClearCart = async() => {
+    setCartItems([]);
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/cart/clear/${userId}`)
+    console.log(response);
+    setCartCount(0);
+  }
+
   const handleQuantityChange = async (id, newQuantity) => {
     if (newQuantity < 1) return
     setUpdatingItem(id)
@@ -304,7 +311,7 @@ function Cart() {
                     Continue Shopping
                   </button>
                   <button
-                    onClick={() => setCartItems([])}
+                    onClick={handleClearCart}
                     className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors duration-200"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

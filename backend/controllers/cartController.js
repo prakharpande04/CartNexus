@@ -80,6 +80,22 @@ const removeFromCart = async (req, res) => {
   }
 };
 
+const clearCart = async(req, res) => {
+  const {userId} = req.params;
+
+  try{
+    const cart = await Cart.findOne({ userId });
+    cart.items = [];
+    cart.totalQuantity = 0;
+    cart.totalPrice = 0;
+    await cart.save();
+    return res.status(200).json({message : 'Cart cleared'});
+  }
+  catch{
+    return res.status(404).json({ message: 'Cart not cleared' });
+  }
+};
+
 const updateCartItem = async (req, res) => {
   const { userId, productId, newQuantity } = req.params;
   console.log(`Updating product ${productId} in cart for user ${userId} with quantity ${newQuantity}`);
@@ -128,4 +144,4 @@ const getCount = async (req, res) => {
     }
 };
 
-module.exports = { addToCart, getCart, removeFromCart, updateCartItem, getCount };
+module.exports = { addToCart, getCart, removeFromCart, updateCartItem, clearCart, getCount };
