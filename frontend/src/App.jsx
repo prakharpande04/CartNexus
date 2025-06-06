@@ -12,6 +12,10 @@ import Checkout from './pages/Checkout';
 import PaymentStatus from './pages/PaymentStatus';
 import SearchResults from './pages/SearchResults';
 import TermsAndConditions from './pages/TermsAndConditions';
+import axios from 'axios';
+
+const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/`);
+console.log("Warm Up Response : ", res.data);
 
 const ProtectedRoute = ({ element }) => {
   const { isAuthenticated } = useAuth0();
