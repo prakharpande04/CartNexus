@@ -41,32 +41,30 @@ exports.handleCashfreeWebhook = async (req, res) => {
 
     await newStatus.save();
 
-    if (event === 'PAYMENT_SUCCESS_WEBHOOK') {
-      const rawUserId = data.customer_details?.customer_id || 'guest';
+    const rawUserId = data.customer_details?.customer_id || 'guest';
 
-      const paymentInfo = {
-        userId: rawUserId,
-        orderId: data.order?.order_id,
-        paymentId: data.payment?.cf_payment_id,
-        amount: parseFloat(data.payment?.payment_amount),
-        currency: data.payment?.payment_currency,
-        status: data.payment?.payment_status,
-        paymentMethod: data.payment?.payment_group,
-        paidAt: new Date(data.payment?.payment_time),
-      };
+    const paymentInfo = {
+      userId: rawUserId,
+      orderId: data.order?.order_id,
+      paymentId: data.payment?.cf_payment_id,
+      amount: parseFloat(data.payment?.payment_amount),
+      currency: data.payment?.payment_currency,
+      status: data.payment?.payment_status,
+      paymentMethod: data.payment?.payment_group,
+      paidAt: new Date(data.payment?.payment_time),
+    };
 
 
-      console.log('📥 Payment success data:', paymentInfo);
-      await OrderPayment.create(paymentInfo);
-      console.log('💾 Payment saved');
+    console.log('📥 Payment success data:', paymentInfo);
+    await OrderPayment.create(paymentInfo);
+    console.log('💾 Payment saved');
 
-      await Cart.findOneAndUpdate(
-        { userId: rawUserId.replace('_', '|') }, // Convert userId from 'user|id' to 'user_id'
-        { $set: { items: [] } },
-        { $set: { totalQuantity: 0 } } // Clear the cart items
-      );
-      console.log('Cart items cleared for user:', rawUserId);
-    }
+    await Cart.findOneAndUpdate(
+      { userId: rawUserId.replace('_', '|') }, // Convert userId from 'user|id' to 'user_id'
+      { $set: { items: [] } },
+      { $set: { totalQuantity: 0 } } // Clear the cart items
+    );
+    console.log('Cart items cleared for user:', rawUserId);
 
     res.status(200).json({ message: 'Webhook received' });
   } catch (err) {
