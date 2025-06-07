@@ -19,6 +19,7 @@ const Register = () => {
     email: user?.email || "",
     phone: "",
     gender: "",
+    avatarUrl: "none",
     addressLine1: "",
     addressLine2: "",
     city: "",

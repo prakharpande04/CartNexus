@@ -1,16 +1,20 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import axios from "axios"
 import { getCookie } from "../utils/cookie"
 
 function Profile() {
   const userId = getCookie("userId")
+  const fileInputRef = useRef(null);
+  const [avatarUrl, setAvatarUrl] = useState("/placeholder.svg?height=128&width=128");
+  const [uploading, setUploading] = useState(false);
+
   const initialUserData = {
     userId: "",
     fullName: "",
     email: "",
     phone: "",
     gender: "",
-    avatar: "",
+    avatarUrl: "",
     address: {
       addressLine1: "",
       addressLine2: "",
@@ -69,12 +73,56 @@ function Profile() {
     }
   }
 
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+    formData.append("folder", "shopnexus/userimage");
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      console.log("response from cloudinary");
+      
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/user/avatarUrl/${userId}`, {
+        avatarUrl: data.secure_url,
+      });
+
+      // ✅ Then update local state
+      setAvatarUrl(data.secure_url);
+      setUserData((prev) => ({
+      ...prev,
+      avatarUrl: data.secure_url,
+    }));
+    
+      console.log("Avatar upload status : ");
+    } catch (err) {
+      console.error("Upload failed:", err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const fetchedData = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/login/${userId}`)
         const { user, address } = fetchedData.data
         console.log("Fetched user data:", user, address)
+        setAvatarUrl(user.avatarUrl);
 
         const mergedData = {
           userId: user.userId || "",
@@ -82,7 +130,7 @@ function Profile() {
           email: user.email || "",
           phone: user.phone || "",
           gender: user.gender || "",
-          avatar: user.avatar || "",
+          avatarUrl: user.avatarUrl || "",
           address: {
             addressLine1: address.addressLine1 || "",
             addressLine2: address.addressLine2 || "",
@@ -99,6 +147,7 @@ function Profile() {
           email: user.email || "",
           phone: user.phone || "",
           gender: user.gender || "",
+          avatarUrl: user.avatarUrl
         })
 
         setAddressDetails({
@@ -118,6 +167,10 @@ function Profile() {
 
     fetchUserData()
   }, [userId])
+
+  const handleImageUpload = async() => {
+
+  }
 
   if (loading) {
     return (
@@ -182,6 +235,40 @@ function Profile() {
               {/* Avatar Section */}
               <div className="text-center mb-8">
                 <div className="relative inline-block">
+                  <div
+                    className="w-32 h-32 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 p-1 shadow-xl cursor-pointer"
+                    onClick={handleAvatarClick}
+                  >
+                    <img
+                      src={avatarUrl}
+                      alt="Profile Avatar"
+                      className="w-full h-full rounded-xl object-cover"
+                    />
+                  </div>
+
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white/20 flex items-center justify-center">
+                    {uploading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent animate-spin rounded-full"></div>
+                    ) : (
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                  </div>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                  />
+                </div>
+                {/* <div className="relative inline-block">
                   <div className="w-32 h-32 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 p-1 shadow-xl">
                     <img
                       src={userData.avatar || "/placeholder.svg?height=128&width=128"}
@@ -198,7 +285,7 @@ function Profile() {
                       />
                     </svg>
                   </div>
-                </div>
+                </div> */}
                 <h2 className="text-xl font-bold text-white mt-4 mb-2">{userData.fullName || "User Name"}</h2>
                 <p className="text-gray-400 text-sm">{userData.email}</p>
               </div>
