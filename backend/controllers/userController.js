@@ -37,6 +37,7 @@ const register = async (req, res) => {
           email: registrationData.email,
           phone: registrationData.phone,
           gender: registrationData.gender,
+          avatarUrl: registrationData.avatarUrl
         });
         console.log("checkpoint1");
 
@@ -120,4 +121,27 @@ const updateAddress = async (req, res) => {
     }
 };
 
-module.exports = { login, register, updateUser, updateAddress };
+const updateAvatar = async(req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { avatarUrl } = req.body;
+        console.log("to be updated : ", avatarUrl);
+
+        if (!avatarUrl) {
+            return res.status(400).json({ message: "avatarUrl is required" });
+        }
+
+
+        const newAvatar = await User.findOne({ userId });
+        newAvatar.avatarUrl = avatarUrl;
+
+        await newAvatar.save();
+        return res.status(200).json({message : "Updated!!"});
+
+    }
+    catch{
+        return res.status(500).json({message : "Update Error"});
+    }
+}
+
+module.exports = { login, register, updateUser, updateAddress, updateAvatar};
