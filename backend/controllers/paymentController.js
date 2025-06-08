@@ -22,7 +22,7 @@ const getSessionId = async(req, res) => {
     const rawamount = req.params.total;
     const amount = parseFloat(rawamount).toFixed(2);
 	const request = {
-		order_amount: "1",              //amount,
+		order_amount: amount,
 		order_currency: "INR",
 		customer_details: {
 			customer_id: customer_id,
