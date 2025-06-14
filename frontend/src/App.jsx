@@ -13,6 +13,7 @@ import Checkout from './pages/Checkout';
 import PaymentStatus from './pages/PaymentStatus';
 import SearchResults from './pages/SearchResults';
 import TermsAndConditions from './pages/TermsAndConditions';
+import ContactUs from './pages/ContactUs';
 import axios from 'axios';
 
 const ProtectedRoute = ({ element }) => {
@@ -57,6 +58,7 @@ function App() {
           <Route path="/checkout" element={<ProtectedRoute element={<Checkout />} />} />
           <Route path="/payment-status" element={<PaymentStatus />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/search" element={<ProtectedRoute element={<SearchResults />} />} />
 
           {/* ✅ Catch-all route with proper isAuthenticated check */}
