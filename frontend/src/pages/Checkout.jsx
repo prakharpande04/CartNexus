@@ -45,7 +45,7 @@ function Checkout() {
     const initializeSDK = async () => {
       try {
         cashfree.current = await load({
-          mode: "production", // or 'TEST' for testing environment
+          mode:"sandbox"                            //"production", // or 'TEST' for testing environment
         })
         console.log("Cashfree SDK initialized successfully")
       } catch (error) {

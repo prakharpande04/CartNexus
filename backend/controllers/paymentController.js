@@ -4,7 +4,7 @@ const Payment = require('./../models/Payment');
 
 
 const cashfree = new Cashfree(
-	CFEnvironment.PRODUCTION,
+	CFEnvironment.SANDBOX,                     // PRODUCTION,
 	process.env.CASHFREE_APP_ID,
     process.env.CASHFREE_SECRET_KEY
 );
@@ -31,8 +31,8 @@ const getSessionId = async(req, res) => {
             customer_phone: "8275711340", // Placeholder, replace with actual phone number if available
 		},
 		order_meta: {
-			return_url:
-				"https://shopnexus04.vercel.app/payment-status?order_id={order_id}"
+			return_url: "http://localhost:5000/payment-status?order_id={order_id}"
+				//"https://shopnexus04.vercel.app/payment-status?order_id={order_id}"
 		},
 		order_note: "",
 	};
